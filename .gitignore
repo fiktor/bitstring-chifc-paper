@@ -9,3 +9,4 @@ build/*
 **/*.nav
 **/*.toc
 **/*.snm
+**/*Notes.bib
