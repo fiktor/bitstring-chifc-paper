@@ -1,0 +1,11 @@
+__pycache__
+build/*
+**/.*.swp
+**/.*_checkpoints/*
+**/.*.swo
+**/*.out
+**/*.log
+**/*.aux
+**/*.nav
+**/*.toc
+**/*.snm
