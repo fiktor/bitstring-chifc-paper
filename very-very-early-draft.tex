@@ -13,6 +13,11 @@
 \DeclareMathOperator{\smoothen}{smoothen}
 \DeclareMathOperator{\mean}{mean}
 
+\usepackage{xcolor}
+%\newcommand{\bbk}[1]{\textcolor{red}{[B: #1]}}
+\newcommand{\DL}[1]{\textcolor{blue}{[DL: #1]}}
+\newcommand{\NE}[1]{\textcolor{magenta}{[NE: #1]}}
+
 \begin{document}
 
 \title{Machine learning Fisher Information Metric from bitstrings}
@@ -58,6 +63,8 @@ bitstrings $z$ is defined as
 \end{equation}
 We are interested in the fidelity between bitstring distributions at different
 $s$ (e.g. $s=s_1$ and $s=s_2$), which we will denote as $F_c(s_1, s_2)$.
+
+\NE{This is an example of a commonly used in-line comment which is separated by color. I could say something like: "This sentence is awkward" or "Needs citation" or very meta "Please use enquote for real quotes and not literal quotes."}
 
 Fidelity susceptibility is defined as the term $\chi_{F_c}(s)$ in the Taylor
 expansion
