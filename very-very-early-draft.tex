@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress]{revtex4-2}
 % General document formatting
 \usepackage[margin=0.7in]{geometry}
 \usepackage[parfill]{parskip}
@@ -14,6 +14,21 @@
 \DeclareMathOperator{\mean}{mean}
 
 \begin{document}
+
+\title{Title}
+\author{First Last}
+\email{email}
+\affiliation{USC affiliation}
+
+\date{\today}
+
+\begin{abstract}
+The abstract
+\end{abstract}
+
+\maketitle
+
+
 \section{Introduction}
 TODO:
 
@@ -102,12 +117,17 @@ In this work we propose the following method:
   \mean_{(z, \lambda_1) \in \mathcal{D}_{\textrm{train}}}
   M(\lambda_1, 0, z)^{j}M(\lambda_1, 0, z)^{k}\right)(\lambda).
   \end{equation}
-  \item Derivation:
+\end{itemize}
+
+TODO: expand the explanation.
+
     \begin{multline*}
       \chi_{F_c}(\lambda) = \lim_{\delta \lambda\to 0} \frac2{\delta \lambda^2} \left(1 - \mathbb{E}_{z\sim Q(\bullet)} \frac{\sqrt{P(z|\lambda-\delta \lambda/2)P(z|\lambda+\delta \lambda/2)}}{Q(z)}\right)
       \\ \simeq \lim_{\delta \lambda\to 0} \mathbb{E}_{Q}\frac2{\delta \lambda^2}\frac{2\sinh^2(l\delta \lambda/4)}{\cosh(l\delta \lambda/2)} \simeq \frac14 \mathbb{E}_{z|\lambda} M(\lambda, 0, z)^2.
     \end{multline*}
-\end{itemize}
 
+TODO: models
+
+TODO: experiments
 
 \end{document}
