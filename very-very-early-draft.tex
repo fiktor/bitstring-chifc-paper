@@ -20,6 +20,42 @@ TODO:
 Such a family can arise, e.g., from measurements of a low-temperature
 Gibbs ensemble of Hamiltonians parametrized by a parameter $\lambda$.
 
+\section{Classical Fidelity Susceptibility}
+Classical fidelity between 2 probability distributions $p$ and $q$ of
+bitstrings $z$ is defined as
+\begin{equation}
+  F_c(p, q) = \sum_{z} \sqrt{p(z) q(z)}.
+\end{equation}
+We are interested in the fidelity between bitstring distributions at different
+$s$ (e.g. $s=s_1$ and $s=s_2$), which we will denote as $F_c(s_1, s_2)$.
+
+Fidelity susceptibility is defined as the term $\chi_{F_c}(s)$ in the Taylor
+expansion
+\begin{equation}
+\label{eq:Fcs.Tailor}
+  F_c(s, s+\delta s) = 1 - \frac{\delta s^2}{2} \chi_{F_c}(s) + O(\delta s^3).
+\end{equation}
+For such Taylor expansion to exist it is sufficient that the probabilities have
+a Taylor expansion up to $O(\delta s^3)$. More generally, probability
+distribution can depend on a point $\lambda$ on a manifold $\Lambda$,
+in which case the Tailor expansion \eqref{eq:Fcs.Tailor} would become
+\begin{equation}
+\label{eq:Fcl.Tailor}
+  F_c(\lambda, \lambda+\delta \lambda) = 1 - \frac{\delta \lambda_{j} \delta \lambda_k}{2} \chi_{F_c}^{jk}(\lambda) + O(\delta \lambda^3).
+\end{equation}
+
+\subsection{Classical and quantum fidelity susceptibility}
+Fact 1: For pure states $\mathbb{E}\chi_{F_c} (s) = \frac12 \chi_F (s)$
+where the expectation is over all orthogonal bases to perform the measurement in.
+
+TODO:proof
+
+Fact 2: For computational basis measurement of a non-degenerate ground state
+of a real-valued Hamiltonian $H$, then $\chi_{F_c}(s) = \chi_F(s)$
+almost everywhere.
+
+TODO:proof
+
 \section{Problem setup}
 \begin{itemize}
   \item In this work we consider a family of distributions of
