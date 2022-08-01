@@ -6,9 +6,72 @@
 % https://ftp.cc.uoc.gr/mirrors/CTAN/macros/latex/contrib/parskip/parskip.pdf
 \usepackage[utf8]{inputenc}
 
-% Related to math
+% Math packages:
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 
+% Our definitions:
+\DeclareMathOperator{\smoothen}{smoothen}
+\DeclareMathOperator{\mean}{mean}
+
 \begin{document}
-This is an empty document.
+\section{Introduction}
+TODO:
+
+Such a family can arise, e.g., from measurements of a low-temperature
+Gibbs ensemble of Hamiltonians parametrized by a parameter $\lambda$.
+
+\section{Problem setup}
+\begin{itemize}
+  \item In this work we consider a family of distributions of
+bitstrings $\{\mathcal{D}_{\lambda}\}_{\lambda \in \Lambda}$, each of length $n$.
+  \item We are given a finite sample $\mathcal{D}_{\textrm{train}}$ of size $N$
+  of pairs $(\lambda, z)$ s.t. $P(z|\lambda) = P_{\mathcal{D}_{\lambda}}(z)$.
+  \item We are also given (possibly implicitly via coordinate description of $\Lambda$) a naive metric $g^0$ on $\Lambda$.
+  \item We are asked to estimate the Fisher information metric $g$ on $\Lambda$ corresponding to distributions $\mathcal{D}_{\lambda}$.
+  \item Locations with high $g / g^0$ are then considered to be conjectured locations of possible phase transitions.
+\end{itemize}
+
+We focus on the task of identifying phase transitions in that
+family. Rigorously speaking, phase transitions are only defined
+in the limit $n\to\infty$, while we are dealing with finite size systems.
+A solution to that is to look at Fisher information metric: high distances according to Fisher information metric for points close according to naive metric likely correspond to phase transitions.
+
+\section{Bitstring-ChiFc method}
+In this work we propose the following method:
+\begin{itemize}
+  \item Collect training dataset $\mathcal{D}_{\chi_{F_c}\textrm{-train}}$ of
+  the form $(\lambda_0, \delta \lambda, z, y)$, where $z$ is sampled from
+  $p(\bullet, \lambda=\lambda_{z})$,
+  $p_{+} = p(\lambda_{z} = \lambda_0 + \delta \lambda / 2| \lambda_{z} = \lambda_0 \pm \delta \lambda / 2)$, and
+    $\mathbb{E}(y|\lambda_0, \delta \lambda, z) = p_{+}$.
+    In practice $y \in \{0, 1\}$.
+    Do it in the following way:
+    \begin{itemize}
+      \item Consider $\mathcal{D}_{\textrm{train}}$ consisting of pairs
+      $(z, \lambda)$.
+      \item Sample pairs $(z_{i{+}}, \lambda_{i{+}})$,
+      $(z_{i{-}}, \lambda_{i{-}})$ from $\mathcal{D}_{\textrm{train}}$.
+      \item Compute $\lambda_i = (\lambda_{i{+}} + \lambda_{i{-}})/2$,
+      $\delta \lambda_i = \lambda_{i{+}} - \lambda_{i{-}}$.
+      \item Add tuples $(\lambda_i, \delta \lambda_i, z_{i{+}}, 1)$ and $(\lambda_i, \delta \lambda_i, z_{i{-}}, 0)$ to the dataset $\mathcal{D}_{\chi_{F_c}\textrm{-train}}$.
+    \end{itemize}
+  \item Train a model $M$, which given $(\lambda_0, \delta \lambda, z)$
+  will predict $l = M(\lambda_0, \delta \lambda, z)$
+  s.t. $p_{+} = (1+e^{-l \cdot \delta \lambda})^{-1}$.
+  Do this by minimizing cross-entropy loss on the dataset
+  $\mathcal{D}_{\chi_{F_c}\textrm{-train}}$.
+  \item Estimate
+  \begin{equation}
+  \chi_{F_c}^{jk}(\lambda) = \smoothen\left(\lambda_1 \mapsto
+  \mean_{(z, \lambda_1) \in \mathcal{D}_{\textrm{train}}}
+  M(\lambda_1, 0, z)^{j}M(\lambda_1, 0, z)^{k}\right)(\lambda).
+  \end{equation}
+  \item Derivation:
+    \begin{multline*}
+      \chi_{F_c}(\lambda) = \lim_{\delta \lambda\to 0} \frac2{\delta \lambda^2} \left(1 - \mathbb{E}_{z\sim Q(\bullet)} \frac{\sqrt{P(z|\lambda-\delta \lambda/2)P(z|\lambda+\delta \lambda/2)}}{Q(z)}\right)
+      \\ \simeq \lim_{\delta \lambda\to 0} \mathbb{E}_{Q}\frac2{\delta \lambda^2}\frac{2\sinh^2(l\delta \lambda/4)}{\cosh(l\delta \lambda/2)} \simeq \frac14 \mathbb{E}_{z|\lambda} M(\lambda, 0, z)^2.
+    \end{multline*}
+\end{itemize}
+
+
 \end{document}
