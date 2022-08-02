@@ -1,7 +1,8 @@
 \documentclass[american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress]{revtex4-2}
 % General document formatting
+\usepackage{tikz}
 \usepackage[margin=0.7in]{geometry}
-\usepackage[parfill]{parskip}
+\usepackage{xintfrac}
 % Documentation:
 % https://ftp.cc.uoc.gr/mirrors/CTAN/macros/latex/contrib/parskip/parskip.pdf
 \usepackage[utf8]{inputenc}
@@ -12,9 +13,11 @@
 % Our definitions:
 \DeclareMathOperator{\smoothen}{smoothen}
 \DeclareMathOperator{\mean}{mean}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\absmt}{\abs{m_{T}'}}
 
 \usepackage{xcolor}
-%\newcommand{\bbk}[1]{\textcolor{red}{[B: #1]}}
+\newcommand{\bbk}[1]{\textcolor{green}{[VK: #1]}}
 \newcommand{\DL}[1]{\textcolor{blue}{[DL: #1]}}
 \newcommand{\NE}[1]{\textcolor{magenta}{[NE: #1]}}
 
@@ -41,6 +44,68 @@ compared to the number of possible bitstrings.
 \maketitle
 
 \section{Presentation}
+\subsection{Introduction}
+Let's talk about phase transitions.  Consider the Hamiltonian
+on a $2 \times L$ lattice given by the following equations.
+\begin{equation}
+  \label{eq:Hladder.1}
+  H(s,K,U) = (1-s) H_0 + s H_1,
+\end{equation}
+\begin{equation}
+  \label{eq:Hladder.2}
+  H_0 = -\sum_{i=0}^{L-1} (X_{T_i} + X_{B_i}),
+\end{equation}
+\begin{multline}
+  \label{eq:Hladder.3}
+  H_1 = \sum_{i=0}^{L-1} \biggl(K Z_{T_i} Z_{T_{i+1}} - K Z_{T_i} Z_{B_i}
+    - K Z_{B_i} Z_{B_{i+1}} \\
+  - K Z_{T_i} + \frac{U}{2} Z_{B_i}\biggr).
+\end{multline}
+Here qubits $T_L$ and $B_L$ are identified with $T_0$ and $B_0$ respectively.
+
+It is called ``Frustrated Ladder Hamiltonian'' and is schematically represented
+by the following diagram:
+\begin{center}
+  \pgfmathparse{\columnwidth/10.7cm}%
+  \edef\tikzscale{\pgfmathresult}%
+  \begin{tikzpicture}[scale=\tikzscale]
+    \foreach \x in {0,...,9}{
+      \draw (\x,0) circle (0.3) node (n0x\x){$T_{\x}$};
+      \draw (\x,-1) circle (0.3) node (n1x\x){$B_{\x}$};
+      \draw (n0x\x) -- (n1x\x);
+    }
+    \foreach \x[count=\xnext from 1] in {0,...,8}{
+      \draw[dotted,line width=1pt] (n0x\x) -- (n0x\xnext);
+      \draw (n1x\x) -- (n1x\xnext);
+    }
+    \draw[dotted,line width=1pt] (-0.7,0) -- (n0x0);
+    \draw (-0.7,-1) -- (n1x0);
+    \draw[dotted,line width=1pt] (9.7,0) -- (n0x9);
+    \draw (9.7,-1) -- (n1x9);
+  \end{tikzpicture}
+\end{center}
+On this diagram of $L=10$ Frustrated Ladder Hamiltonian
+the solid lines represent ferromagnetic couplings and
+dotted lines --- antiferromagnetic couplings. For a fixed $L$
+the Frustrated Ladder Hamiltonian depends on 3 parameters, $s, K, U$.
+We set $K=1$ and consider the values $s\in[0,1]$, $U\in[0,1]$.
+
+How would you find phase transitions of that Hamiltonian? For that particular
+Hamiltonian people already know a couple of order parameters given by the
+following equations.
+\begin{equation}
+  \label{eq:mt}
+  \absmt = \abs{\sum_i Z_{T_i}(-1)^i}
+\end{equation}
+\begin{equation}
+  \label{eq:mb}
+  m_B = \sum_i Z_{B_i}
+\end{equation}
+
+These are called ``staggered magnetization of the top row'' and ``magnetization
+of the bottom row'' respectively. For $L=10$ we can compute these for various
+values of the parameters of the Hamiltonian and produce the following diagrams:
+\includegraphics[width=\columnwidth]{lanczos_chi0_gp.png}
 
 \section{TODO}
 \begin{enumerate}
