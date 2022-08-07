@@ -262,7 +262,12 @@ Similarly, the classical fidelity susceptibility $\chi_{F_c}(s)$ is defined by
 Issues 1 and 2 are then solved by defining the task we are trying to solve
 as the task of identifying the local maxima of fidelity susceptibility.
 To address issue 3 we look at the properties of classical fidelity
-susceptibility, fidelity susceptibility, adn relations between them.
+susceptibility, fidelity susceptibility, and relations between them.
+
+\subsection{Motivation for definitions}
+Finite size systems in the sequence of systems experiencing a phase transition
+in the thermodynamic limit are known to often experience maxima of fidelity susceptibility at or around the location of the phase transition. Intuitively, that
+makes sense because the fidelity susceptibility measures the square rate of change of the underlying state and it is known that phase transitions correspond to rapid change of the underlying state.
 
 \subsection{Properties of fidelity susceptibility}
 Roughly speaking, we plan to prove the following properties.
@@ -286,11 +291,12 @@ See the below theorems for the exact statements.
         F(\ket{\phi}, \ket{\psi}) =
           F(\ket{\phi}\bra{\phi}, \ket{\psi}\bra{\psi}).
       \end{equation}
-    \item If $\rho$ and $\sigma$ are diagonal matrices with diagonal entries
+    \item If $\rho$ and $\sigma$ are diagonal density matrices with diagonal entries
       equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively, then
       \begin{equation}
         F(\rho, \sigma) = F(p, q).
       \end{equation}
+    \item $F(\rho, sigma)$
   \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -314,6 +320,12 @@ See the below theorems for the exact statements.
     F(\rho, \sigma) = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right) = \\
     \sum_z \sqrt{\sqrt{q_z} p_z \sqrt{q_z}} = \sum_z \sqrt{p_z q_z} = F(p, q).
   \end{multline}
+  \VK{TODO:5: add part 2}
+  \begin{multline}
+    F(0, s) = F(\rho(0), \rho(s)) \\
+    = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right)
+  \end{multline}
+  \VK{TODO:5: add part 3}
 \end{proof}
 
 \begin{theorem}
