@@ -291,12 +291,14 @@ See the below theorems for the exact statements.
         F(\ket{\phi}, \ket{\psi}) =
           F(\ket{\phi}\bra{\phi}, \ket{\psi}\bra{\psi}).
       \end{equation}
-    \item If $\rho$ and $\sigma$ are diagonal density matrices with diagonal entries
-      equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively, then
+    \item If $\rho$ and $\sigma$ are diagonal density matrices with diagonal
+      entries equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively, then
       \begin{equation}
         F(\rho, \sigma) = F(p, q).
       \end{equation}
-    \item $F(\rho, sigma)$
+    \item $F$ is symmetric with respect to changing the order of its arguments.
+      In particular, for 2 density matrices $\rho$ and $\sigma$ we have
+      $F(\rho, \sigma) = F(\sigma, \rho)$.
   \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -326,6 +328,11 @@ See the below theorems for the exact statements.
     = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right)
   \end{multline}
   \VK{TODO:5: add part 3}
+  Let's prove part 3.
+  Note that the formulas \eqref{eq:def.F.pure} and \eqref{eq:def.Fc} are
+  symmetric with respect to the order of arguments, so the only nontrivial
+  case is for density matrices $\rho$ and $\sigma$ and formula
+  \eqref{eq:def.F.mixed}.
 \end{proof}
 
 \begin{theorem}
@@ -403,7 +410,40 @@ space $\mathcal{H}$ with a basis $\{e_j\}_{j=1}^{d}$, which we will call
 
 \subsection{Resolution of issue 3}
 As we have seen in \VK{TODO: ref}, \VK{TODO: ref}, \VK{TODO: ref}
-classical \VK{TODO}
+classical fidelity susceptibility is expected to be between $\frac12 \chi_F(s)$
+and $\chi_F(s)$ in many cases of interest. Thus, there is a hope that the
+maximum of classical fidelity susceptibility would be close to the maximum
+of fidelity susceptibility in cases of interest. In particular,
+the Hamiltonians which could be implemented on the current quantum annealers
+are stoquastic and, in particular, have real matrix elements in the computational
+basis. Thus if the ground state is non-degenerate $\chi_{F_c}(s) = \chi_F(s)$
+almost everywhere for
+the ground state and no information is lost when replacing $\chi_F(s)$ with
+$\chi_{F_c}(s)$ (for almost all values of $s$) if we are looking for
+phase transitions at zero temperature.
+
+\subsection{Results}
+Here is the comparison based on Lanczos diagonalization for L=10 (20-qubit)
+frustrated ladder Hamiltonian with $K=U=1$: ground truth from Lanczos
+vs reconstruction from Bitstring-ChiFc method.
+\begin{center}
+  \pgfmathparse{\columnwidth/20cm}%
+  \edef\tikzscale{\pgfmathresult}%
+  \begin{tikzpicture}[scale=\tikzscale]
+    % Bitstring-ChiFc: Lanczos (almost exact) vs our method (estimate).
+    \draw (0, 0) node {\includegraphics[width=\columnwidth]{ladder-ed-chifc.png}};
+    \draw[blue, line width=0.4mm] (-0.05, -4.8) -- (-0.05, 4.8);
+    \draw (0.28, -4.8) -- (0.28, 4.8);
+    \draw (-2.3, -3.9) node[align=right] {predicted\\phase transition\\(using 140140 bitstrings)};
+    \draw (1.75, -3.9) node[align=left]{actual\\phase transition};
+    \draw (-1.7, 3) node[align=center]
+    {$\uparrow\uparrow\uparrow\uparrow\downarrow\uparrow\downarrow\downarrow\downarrow\downarrow$\\
+    $\uparrow\downarrow\uparrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow$};
+    \draw (2.2, 3) node[align=center]
+    {$\downarrow\uparrow\downarrow\uparrow\downarrow\uparrow\downarrow\uparrow\downarrow\uparrow$\\
+    $\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow\downarrow$};
+  \end{tikzpicture}
+\end{center}
 
 \section{TODO}
 \begin{enumerate}
