@@ -7,6 +7,7 @@
 % Documentation:
 % https://ftp.cc.uoc.gr/mirrors/CTAN/macros/latex/contrib/parskip/parskip.pdf
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 % Math packages:
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
@@ -15,18 +16,21 @@
 \DeclareMathOperator{\smoothen}{smoothen}
 \DeclareMathOperator{\mean}{mean}
 \DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\atantwo}{atan2}
 \DeclareMathOperator{\real}{Re}
 \DeclareMathOperator{\imag}{Im}
+\DeclareMathOperator{\diag}{diag}
 %\DeclareMathOperator{\arg}{arg}
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\absmt}{\abs{m_{T}'}}
 \newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
 
 % Draft comments
 \usepackage{xcolor}
-\newcommand{\VK}[1]{\textcolor{green}{[VK: #1]}}
+\newcommand{\VK}[1]{\textcolor{teal}{[VK: #1]}}
 \newcommand{\DL}[1]{\textcolor{blue}{[DL: #1]}}
 \newcommand{\NE}[1]{\textcolor{magenta}{[NE: #1]}}
 
@@ -251,12 +255,12 @@ of $F(\rho(s_1), \rho(s_2))$. Then
 term in the Taylor expansion of the fidelity:
 \begin{equation}
 \label{eq:def.chiF}
-  F(s, s + \delta s) = 1 - \frac{\delta s^2}{2} \chi_F(s) + O(\delta s^3).
+  F(s, s + \delta s) = 1 - \frac{\delta s^2}{2} \chi_F(s) + o(\delta s^2).
 \end{equation}
 Similarly, the classical fidelity susceptibility $\chi_{F_c}(s)$ is defined by
 \begin{equation}
 \label{eq:def.chiFc}
-  F_c(s, s + \delta s) = 1 - \frac{\delta s^2}{2} \chi_{F_c}(s) + O(\delta s^3).
+  F_c(s, s + \delta s) = 1 - \frac{\delta s^2}{2} \chi_{F_c}(s) + o(\delta s^2).
 \end{equation}
 
 Issues 1 and 2 are then solved by defining the task we are trying to solve
@@ -284,6 +288,9 @@ Roughly speaking, we plan to prove the following properties.
 \end{itemize}
 See the below theorems for the exact statements.
 
+The following theorem states the properties of the fidelity relevant for this
+paper. For proof of these, as well as many other, properties of the fidelity
+the reader is referred to \cite[\S 9]{nielsen-chuang-2010}.
 \begin{theorem}
   \begin{enumerate}
     \item If $\ket{\phi}$ and $\ket{\psi}$ are pure states, then
@@ -291,108 +298,454 @@ See the below theorems for the exact statements.
         F(\ket{\phi}, \ket{\psi}) =
           F(\ket{\phi}\bra{\phi}, \ket{\psi}\bra{\psi}).
       \end{equation}
+      In other words, \eqref{eq:def.F.pure} is consistent with
+      \eqref{eq:def.F.mixed}.
     \item If $\rho$ and $\sigma$ are diagonal density matrices with diagonal
       entries equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively, then
       \begin{equation}
-        F(\rho, \sigma) = F(p, q).
+        F(\rho, \sigma) = F_c(p, q).
       \end{equation}
-    \item $F$ is symmetric with respect to changing the order of its arguments.
-      In particular, for 2 density matrices $\rho$ and $\sigma$ we have
-      $F(\rho, \sigma) = F(\sigma, \rho)$.
+      In other words, \eqref{eq:def.F.mixed} is consistent with \eqref{eq:def.Fc}.
+    \item If $\rho$ and $\sigma$ are two density matrices, we have
+      \begin{equation}
+        \label{eq:prop.F.1}
+        F(\rho, \sigma) = F(\sigma, \rho),
+      \end{equation}
+      \begin{equation}
+        \label{eq:prop.F.2}
+        0 \leq F(\rho, \sigma) \leq 1,
+      \end{equation}
+      \begin{equation}
+        \label{eq:prop.F.3}
+        F(\rho, \sigma) = 1 \textrm{ iff } \rho = \sigma,
+      \end{equation}
+      \begin{equation}
+        \label{eq:prop.F.4}
+        F(\rho, \sigma) = 0 \textrm{ iff } \rho \sigma = 0.
+      \end{equation}
   \end{enumerate}
 \end{theorem}
-\begin{proof}
-  Suppose $\ket{\phi}$ and $\ket{\psi}$ are pure states. Then
-  \begin{multline}
-    F(\ket{\phi}\bra{\phi}, \ket{\psi}\bra{\psi}) \\ 
-    = \Tr\left(
-      \sqrt{\sqrt{\ket{\psi}\bra{\psi}}\ket{\phi}\bra{\phi}
-      \sqrt{\ket{\psi}\bra{\psi}}}
-    \right) \\
-    = \Tr\left(
-      \sqrt{\ket{\psi}\braket{\psi|\phi}\braket{\phi|\psi}\bra{\psi}}
-    \right) \\
-    = \abs{\braket{\psi|\phi}} \Tr\left(\ket{\psi}\bra{\psi}\right)
-    = \abs{\braket{\psi|\phi}}
-    = F(\ket{\phi}, \ket{\psi}).
-  \end{multline}
-  Suppose now $\rho$ and $\sigma$ are diagonal matrices with diagonal entries
-  equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively. Then
-  \begin{multline}
-    F(\rho, \sigma) = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right) = \\
-    \sum_z \sqrt{\sqrt{q_z} p_z \sqrt{q_z}} = \sum_z \sqrt{p_z q_z} = F(p, q).
-  \end{multline}
-  \VK{TODO:5: add part 2}
-  \begin{multline}
-    F(0, s) = F(\rho(0), \rho(s)) \\
-    = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right)
-  \end{multline}
-  \VK{TODO:5: add part 3}
-  Let's prove part 3.
-  Note that the formulas \eqref{eq:def.F.pure} and \eqref{eq:def.Fc} are
-  symmetric with respect to the order of arguments, so the only nontrivial
-  case is for density matrices $\rho$ and $\sigma$ and formula
-  \eqref{eq:def.F.mixed}.
-\end{proof}
+
+Before moving to fidelity susceptibility, we want to describe a generalization
+of the fidelity susceptibility covered in \cite{zanardi2007information}.
+Formulas \eqref{eq:def.chiF} and \eqref{eq:def.chiFc} assume dependence
+on a single parameter $s$. In practice, the Hamiltonian of interest depends
+on multiple parameters, e.g. the frustrated ladder Hamiltonian in
+\eqref{eq:Hladder.1} depends on 3 real parameters: $s, K, U$. In general,
+we can say that a state of interest depend on a parameter $\lambda$ from
+a parameter manifold $\mathcal{M}$. In general, these parameters
+can include the parameters of the Hamiltonian and the parameters impacting
+how the state is derived from that Hamiltonian (e.g. temperature).
+Then, similarly to equations
+\eqref{eq:def.chiF} and \eqref{eq:def.chiFc} we can expand the fidelity
+to the second order.
+\begin{equation}
+\label{eq:def.gF}
+  F(\lambda, \lambda + \delta \lambda) =
+  1 - \frac12 \sum_{\mu\nu} g_{\mu\nu} \delta \lambda^\mu \delta \lambda^\nu
+  + o(\abs{\delta \lambda}^2).
+\end{equation}
+The resulting second term represents a metric
+\begin{equation}
+\label{eq:def.gmetric}
+  g = \sum_{\mu\nu} g_{\mu\nu} d\lambda^\mu d\lambda^\nu.
+\end{equation}
+The metric $g$ described by \eqref{eq:def.gF} and \eqref{eq:def.gmetric}
+is invariant with
+respect to the choice of the coordinates $\lambda$ on $\mathcal{M}$.
+As explained in \cite{zanardi2007information}, phase transitions are expected
+to correspond to singularities in the metric \eqref{eq:def.gmetric} in the
+thermodynamic limit. We, however, are interested in the finite systems
+of a fixed size. Therefore, we are interested in identifying the vectors
+$\varphi$ on $\mathcal{M}$ with high values of
+$g(\varphi, \varphi) / g_0(\varphi, \varphi)$,
+where $g_0$ is a metric considered to be non-singular.
 
 \begin{theorem}
-\begin{enumerate}
-  \item Suppose $\ket{\varphi(s)}$ is a state defined in the neighbourhood of
-  $s = s_0 \in \mathbb{R}$ and differentiable at $s=s_0$.
-  Then the fidelity susceptibility is well-defined at $s=s_0$ and is given by
-  \begin{equation}
-    \chi_F(s_0) = \norm{\dot\varphi_\perp(s_0)}^2,
-  \end{equation}
-  where $\varphi_\perp(s)$ is the component of $\ket{\varphi(s)}$ orthogonal
-  to $\ket{\varphi(s_0)}$ and $\dot\bullet$ denotes the derivative with respect
-  to $s$.
-\end{enumerate}
+  \label{th:def.g}
+  \begin{enumerate}
+    \item Suppose $\ket{\psi(\lambda)}$ is a state defined in the
+      neighbourhood of
+      $\lambda = \lambda_0 \in \mathcal{M}$ and differentiable at
+      $\lambda=\lambda_0$.  Then the fidelity susceptibility metric
+      is well-defined at
+      $\lambda=\lambda_0$ and is given by
+      \begin{multline}
+        \label{eq:gmunu.pure}
+        g_{\mu\nu}(\lambda_0) = \real\bigl(\braket{\partial_\mu \psi(\lambda_0)
+          | \partial_\nu \psi(\lambda_0)}\bigr)\\
+        - \braket{\partial_\mu \psi(\lambda_0) | \psi(\lambda_0)}
+          \braket{\psi(\lambda_0) | \partial_\nu \psi(\lambda_0)},
+      \end{multline}
+      where $\partial_\mu \psi(\lambda_0)$ is a compact notation for
+      $\left.\frac{\partial \psi(\lambda)}{\partial \lambda^\mu}
+      \right|_{\lambda=\lambda_0}$.
+    \item Suppose $\rho(\lambda)$ is a density matrix defined in the
+      neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$, has the first
+      derivative at $\lambda = \lambda_0$, and $\Tr(P_0 \rho(\lambda) P_0^*)$
+      has the second derivative
+      at $\lambda = \lambda_0$, where $P_0$ is the orthogonal
+      projector $\mathcal{H} \to \ker\rho(\lambda_0)$.
+      Let $P_{{+}}$ be the orthogonal projector
+      $\mathcal{H} \to \rho(\lambda_0)(\mathcal{H})$,
+      $\rho_{+}(\lambda) = P_{{+}} \rho(\lambda) P_{{+}}^*$.
+      Then in the basis where
+      $\rho_{+}(\lambda_0) = \diag(\xi_0,\dots,\xi_{n_{+}})$
+      we have
+      \begin{multline}
+        g_{\mu\nu}(\lambda_0)
+        = \sum_{j,k} \frac{
+            \real\left(
+              (\partial_\mu\rho_{+}(\lambda_0))_{jk}
+              (\partial_\nu\rho_{+}(\lambda_0))_{kj}
+            \right)
+          }{2(\xi_j + \xi_k)}\\
+        + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^*)
+          \right|_{\lambda=\lambda_0}.
+      \end{multline}
+      In that expression the second term can be bounded from below by
+      \begin{equation}
+        \real\left(
+          P_0 \left(\partial_\mu\rho^*(\lambda_0)\right)
+          P_{+}^* \left(\rho_{+}(\lambda_0)\right)^{-1}
+          P_{+} \left(\partial_\nu\rho(\lambda_0)\right) P_0^*
+        \right).
+      \end{equation}
+      If the bound is not an equality along some vector $\phi$ tangent to
+      $\mathcal{M}$ at $\lambda_0\in\mathcal{M}$ then $\rank(\rho(\lambda))$
+      is larger than $\rank(\rho(\lambda_0))$ in some punctured neighbourhood
+      of $\lambda_0$ (i.e. the neighbourhood
+      excluding the point $\lambda_0$ itself) along the direction $\phi$.
+    \item Suppose $p(\lambda) = \{p_z(\lambda)\}_{z \in \mathcal{S}}$
+      is a discrete probability distribution on a finite set $\mathcal{S}$
+      defined in a neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$.
+      Let $\mathcal{S} = \mathcal{S}_{+} \cup \mathcal{S}_0$ be the split
+      of $\mathcal{S}$ into subsets where $p_z(\lambda_0)$ is positive
+      or zero respectively. Assume that $p_z$ has the first derivative
+      at $\lambda = \lambda_0$ and $\sum_{z\in\mathcal{S}_0} p_z(\lambda)$
+      has the second derivative at $\lambda = \lambda_0$. Then
+      \begin{multline}
+        \label{eq:def.g:c}
+        g_{\mu\nu}(\lambda_0) = \sum_{z\in\mathcal{S}_{+}}
+        \frac{
+          \left(\partial_{\mu} p_z(\lambda_0)\right)
+          \left(\partial_{\nu} p_z(\lambda_0)\right)
+        }{
+          4 p_z(\lambda_0)
+        } \\
+        + \frac12 \left.\partial_{\mu} \partial_{\nu}
+          \sum_{z\in\mathcal{S}_0} p_z(\lambda)\right|_{\lambda = \lambda_0}.
+      \end{multline}
+  \end{enumerate}
 \end{theorem}
-\begin{proof}
-Due to equivariance of the definitions with respect to translations of $s$,
-without loss of generality we can prove the statements in the theorem for
-$s_0 = 0$. Due to the absolute value in \eqref{eq:def.F.pure} we can multiply
-$\ket{\varphi(s)}$ by $e^{-i\theta}$,
-where $\theta = \arg(\braket{\varphi(0)|\varphi(s)})$,
-without changing truthfullness of the conditions of the theorem
-or the value of the fidelity susceptibility. Now we can express
-\begin{equation}
-\ket{\varphi(s)} = (1 - \alpha(s)) \ket{\varphi(0)} + \varphi_1(s),
-\end{equation}
-where $\alpha(s)$ is real and $\varphi_1(s)$ is orthogonal to $\varphi(0)$.
-Also note that $\varphi_1(0) = 0$ and $\varphi_1(s)$ is differentiable at $s=0$.
-\begin{multline}
-  \label{eq:th1.eq1}
-  F(0, s) = \braket{\varphi(0), \varphi(s)} = 1 - \alpha(s)
-  = \sqrt{1 - \norm{\varphi_1(s)}^2}\\
-  = 1 - \frac{s^2}{2} \norm{\dot\varphi_1(0)}^2 + o(s^2).
-\end{multline}
-Comparing \eqref{eq:th1.eq1} with \eqref{eq:def.chiF} we see that
-$\chi_F(0)$ is defined and is equal to
-\begin{equation}
-  \chi_F(0) = \norm{\dot\varphi_\perp(0)}^2.
-\end{equation}
-
-
+Part 1 of this theorem
+is essentially the formula (3) in \cite{zanardi2007information}
+with the exact conditions needed from $\ket{\varphi(\lambda)}$
+specified. As mentioned in \cite{zanardi2007information},
+the proof is essentially done by the Taylor expansion of \eqref{eq:def.F.pure}
+and the usage of the fact that the Hilbert
+space elements representing the states have the norm of 1. Since we do
+not require the second derivative to exist, we have to do that expansion
+with a bit more care than \cite{zanardi2007information}, as spelled out
+in the proof below.
+\begin{proof}[Proof of part 1]
+  Due to equivariance of the definition of $g_{\mu\nu}$ with respect to
+  the change of the coordinates $\lambda \mapsto \lambda - \lambda_0$,
+  without loss of generality we can prove the statements in the theorem for
+  $\lambda_0 = 0$. Let $\ket{\psi_0} = \ket{\psi(0)}$,
+  $\ket{\delta \psi} = \ket{\psi(\delta\lambda)} - \ket{\psi(0)}$.
+  We know that
+  \begin{equation}
+    \ket{\delta \psi} = \sum_{\mu} \ket{\partial_\mu\psi(0)} \delta\lambda^\mu
+      + \ket{r},
+  \end{equation}
+  where $\ket{r} = o(\abs{\delta\lambda})$.
+  We also know that $\braket{\psi(\delta\lambda)|\psi(\delta\lambda)} = 1$.
+  On the other hand,
+  \begin{multline}
+    \braket{\psi(\delta\lambda)|\psi(\delta\lambda)} =
+    1 + 2\real{\braket{\psi_0|\delta\psi}} + \braket{\delta\psi|\delta\psi}\\
+    = 1 + 2\sum_\mu\real{\braket{\psi_0|\partial_\mu\psi(0)}}\lambda^\mu
+      + 2\real{\braket{\psi_0|r}}\\
+      + \sum_{\mu,\nu}\braket{\partial_\mu\psi(0)|\partial_\nu\psi(0)}
+        \delta\lambda^\mu \delta\lambda^\nu
+      + o(\abs{\delta\lambda}^2).
+  \end{multline}
+  Thus,
+  \begin{equation}
+    \real{\braket{\psi_0|\partial_\mu\psi(0)}} = 0
+  \end{equation}
+  and
+  \begin{multline}
+    \real{\braket{\psi_0|r}} \\
+      = - \frac12 \sum_{\mu,\nu}
+        \braket{\partial_\mu\psi(0)|\partial_\nu\psi(0)}
+        \delta\lambda^\mu \delta\lambda^\nu
+    + o(\abs{\delta\lambda}^2).
+  \end{multline}
+  We compute
+  \begin{multline}
+    F(0, \delta\lambda) = \abs{\braket{\psi(0)|\psi(\delta\lambda)}}
+    = \abs{1 + \braket{\psi_0|\delta \psi}} \\
+    = \abs{1 + \sum_\mu\braket{\psi_0|\partial_\mu \psi(0)}\delta\lambda^\mu
+      + \braket{\psi_0|r}} \\
+    = 1 + \real{\braket{\psi_0|r}} - \frac12 \left(
+      \sum_\mu\braket{\psi_0|\partial_\mu \psi(0)}\delta\lambda^\mu\right)^2\\
+      + o(\abs{\delta\lambda}^2) \\
+    = 1 - \frac12 \sum_{\mu\nu} g_{\mu\nu} \delta \lambda^\mu \delta \lambda^\nu
+      + o(\abs{\delta \lambda}^2),
+  \end{multline}
+  where $g_{\mu\nu}$ is given by \eqref{eq:gmunu.pure}.
+  Note that when expanding the absolute value we used
+  the fact that for real $x,y$ around $x=y=0$ we have
+  \begin{equation}
+    \abs{1 + x + iy} = 1 + x + \frac{y^2}{2} + O(x^2 + y^4).
+  \end{equation}
 \end{proof}
 
+\begin{lemma}
+  \label{lm:block-diagonal}
+  Let
+  \begin{equation}
+    M = \begin{pmatrix}A & B \\ B^* & B^* A^{-1} B + C\end{pmatrix}
+  \end{equation}
+  be a finite-dimensional block diagonal matrix over $\mathbb{C}$ with
+  positive definite $A$.
+  Then $M \geq 0$ iff $C \geq 0$.
+  In that case $\rank(M) = \rank(A) + \rank(C)$.
+\end{lemma}
+\begin{proof}
+  The lemma follows from the decomposition
+  \begin{equation}
+    M =
+      \begin{pmatrix}A & B \\ 0 & 1\end{pmatrix}^*
+      \begin{pmatrix}A^{-1} & 0 \\ 0 & C\end{pmatrix}
+      \begin{pmatrix}A & B \\ 0 & 1\end{pmatrix}.
+  \end{equation}
+\end{proof}
+
+\begin{proof}[Proof of part 2]
+  As in the previous proof, without loss of generality set $\lambda_0 = 0$.
+  Denote $\rho_0 = \rho(0)$, $\delta \rho = \rho(\delta \lambda) - \rho_0$.
+  We know that
+  \begin{equation}
+    \delta \rho = \sum_{\mu} \delta\lambda^\mu \partial_\mu\rho(0) + r,
+  \end{equation}
+  where $r = o(\abs{\delta \lambda})$. We also know that
+  \begin{equation}
+    \Tr\left(\partial_\mu\rho(0)\right) = 0,
+  \end{equation}
+  \begin{equation}
+    \Tr(r) = 0.
+  \end{equation}
+  From definition,
+  \begin{equation}
+    F(\rho_0, \rho_0 + \delta \rho) =
+    \Tr \sqrt{\rho_0^2 + \sqrt{\rho_0} \delta \rho \sqrt{\rho_0}}.
+  \end{equation}
+  Let $\rho_{0{+}} = P_{{+}} \rho_0 P_{{+}}^*$,
+  $\delta\rho_{+} = P_{{+}} \delta\rho P_{{+}}^*$,
+  \VK{TODO: should adjoint be $\bullet^*$ or $\bullet^\dagger$?}
+  $r_{+} = P_{{+}} r P_{{+}}^*$. One can see that the expression under the
+  square root acts nontrivially only on $\rho_0(\mathcal{H})$, hence the trace
+  can be computed in that subspace:
+  \begin{equation}
+    \label{eq:F.Tr.sqrt}
+    F(\rho_0, \rho_0 + \delta \rho) = \Tr \sqrt{
+      \rho_{0{+}}^2 + \sqrt{\rho_{0{+}}} \delta \rho_{+} \sqrt{\rho_{0{+}}}
+    }.
+  \end{equation}
+  For $\delta \lambda = 0$ the expression under the square root is equal to
+  $\rho_{0{+}}^2$ and has only positive eigenvalues. Thus, for $\delta \lambda$
+  in some neighbourhood of $0$ the spectrum of the expression under the square
+  root lies in $(c_1, c_2)$ for some $c_1,c_2$ satisfying
+  $0 < c_1 \leq c_2 < \infty$. Thus, in that neighbourhood the square root is
+  an analytic function and can be expressed as an integral with the
+  corresponding resolvent over a contour surrounding $[c_1, c_2]$:
+  \begin{multline}
+    \label{eq:oint}
+    \sqrt{
+      \rho_{0{+}}^2 + \sqrt{\rho_{0{+}}} \delta \rho_{+} \sqrt{\rho_{0{+}}}
+    } \\
+    = \frac{-1}{2\pi i} \oint \sqrt{z} \left(
+      \rho_{0{+}}^2 + \sqrt{\rho_{0{+}}} \delta \rho_{+} \sqrt{\rho_{0{+}}} - z
+    \right)^{-1} dz \\
+    = I_0 + I_1 + I_2 + o(\abs{\delta \lambda}^2),
+  \end{multline}
+  where
+  \begin{multline}
+    I_k = \frac{(-1)^{k+1}}{2\pi i} \oint \sqrt{z}
+    \left(\rho_{0{+}}^2 - z\right)^{-1}\\
+    \left(\sqrt{\rho_{0{+}}} \delta \rho_{+} \sqrt{\rho_{0{+}}} \left(\rho_{0{+}}^2 - z\right)^{-1}\right)^{k} dz.
+  \end{multline}
+  In order to evaluate the metric, we only need to compute the diagonal elements
+  of $I_0, I_1, I_2$ discarding any terms with order $o(\abs{\delta \lambda}^2)$.
+  We pick the basis where $\rho_{0{+}}$ is diagonal with diagonal elements
+  $\xi_0 \geq \xi_1 \geq \dots \geq \xi_{n_{+}-1} > 0$.
+  \begin{equation}
+    I_0 = \rho_{0{+}},
+  \end{equation}
+  \begin{equation}
+    (I_1)_{jj} = \frac12 \delta \rho_{{+},jj}
+    = \frac12 \sum_{\mu} \delta\lambda^{\mu} \partial_{\mu} \rho_{{+},jj}(0)
+      + \frac12 r_{{+},jj},
+  \end{equation}
+  \VK{TODO: what is the proper way to separate ${+}$ and $jj$ in $r_{{+},jj}$?
+  $(r_{+})_{jj}$, $r_{{+}jj}$, $r_{{+}\;jj}$?}
+
+  To evaluate the diagonal entries of $I_2$ we note that for the contour
+  \begin{center}
+    \begin{tikzpicture}
+      \tikzstyle{bullet}=[circle, fill,minimum size=4pt, inner sep=0pt,
+        outer sep=0pt];
+      \draw (0, 0) node[style=bullet,label=90:$0$] {};
+      \draw (2, 0) node[style=bullet,label=0:$a$] {};
+      \draw (3, 0) node[style=bullet,label=0:$b$] {};
+      \draw[-latex] (2.5, 0.5) arc (-270:90:1.5 and 0.5);
+    \end{tikzpicture}
+  \end{center}
+  where $a,b$ are positive real numbers ($a$ could be equal to $b$),
+  we have
+  \begin{equation}
+    \frac1{2\pi i} \oint \frac{\sqrt{z}}{(z-a)^2(z-b)} dz = \frac{-1}{2\sqrt{a}(\sqrt{a} + \sqrt{b})^2}.
+  \end{equation}
+  We then evaluate $(I_2)_{jj}$:
+  \begin{multline}
+    \label{eq:I2jj}
+    (I_2)_{jj} = -\sum_k \frac{\xi_j \delta \rho_{{+},jk}
+      \xi_k \delta \rho_{{+},kj}}{2\xi_j (\xi_j + \xi_k)^2}
+    = -\sum_k \frac{\abs{\delta \rho_{{+},jk}}^2 \xi_k}{2(\xi_j + \xi_k)^2} \\
+    = -\sum_{k,\mu,\nu} \frac{
+        \real\left(
+          (\partial_\mu\rho_{+}(0))_{jk}(\partial_\nu\rho_{+}(0))_{kj}
+        \right) \xi_k
+      }{2(\xi_j + \xi_k)^2} \delta\lambda^\mu\delta\lambda^\nu \\
+      + o(\abs{\delta \lambda}^2).
+  \end{multline}
+  Now we are ready to evaluate the trace
+  \begin{equation}
+    F(\rho_0, \rho_0 + \delta \rho) =
+      \Tr(I_0 + I_1 + I_2) + o(\abs{\delta\lambda}^2).
+  \end{equation}
+  In order to evaluate \eqref{eq:def.gF} we will include the terms up to
+  the order $o(\abs{\delta \lambda}^2)$:
+  \begin{equation}
+    \Tr(I_0) = \Tr(\rho_0) = 1.
+  \end{equation}
+  The first term in $(I_1)_{jj}$ cannot have a non-zero contribution to
+  $\Tr(I_1)$ due to the fact that $\rho(\lambda)$ is non-negative and
+  has $\Tr(\rho(\lambda)) = 1$. For the second term, notice that $\Tr(r) = 0$,
+  hence $\Tr(r_{+}) + \Tr(P_0 r P_0) = 0$, giving
+  \begin{equation}
+    \label{eq:TrI1}
+    \Tr(I_1) = - \Tr(P_0 r P_0^*) / 2.
+  \end{equation}
+  Note that according to lemma \ref{lm:block-diagonal}
+  \begin{multline}
+    P_0 r P_0^*
+    \geq \left(P_{+} \delta\rho P_0^*\right)^* \rho_{0{+}}^{-1}
+      P_{+} \delta\rho P_0^* \\
+    = \sum_{\mu,\nu} \real\left(
+        P_0 \left(\partial_\mu\rho^*(0)\right)
+        P_{+}^* \rho_{0{+}}^{-1}
+        P_{+} \left(\partial_\nu\rho(0)\right) P_0^*
+      \right)
+      \delta\lambda^\mu \delta\lambda^\nu \\
+    + o(\abs{\delta \lambda}^2).
+  \end{multline}
+  Here $\real(a) = (a + a^*) / 2$ for a matrix or an operator $a$.
+  Combining \eqref{eq:I2jj} and \eqref{eq:TrI1} we get
+  \begin{multline}
+    g_{\mu\nu}(0)
+    = \sum_{j,k} \frac{
+        \real\left(
+          (\partial_\mu\rho_{+}(0))_{jk}
+          (\partial_\nu\rho_{+}(0))_{kj}
+        \right) \xi_k
+      }{(\xi_j + \xi_k)^2}\\
+    + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^*)
+      \right|_{\lambda=0}.
+  \end{multline}
+  The remaining statements of the part 2 of the theorem follow from the
+  lemma \ref{lm:block-diagonal}.
+\end{proof}
+Note that part 3 trivially follows from part 2 when applied to diagonal $\rho$.
+
+\VK{The third term is weird.
+Consider an example where $\mathcal{S} = \{0, 1\}$, $\mathcal{M} = \mathbb{R}$,
+$p_0 = \sin^2(\theta)$, $p_1 = \cos^2(\theta)$. Then $g = (1 + \delta_{\theta,0}) ds^2$.}
+
 \begin{theorem}
-Suppose a pure $s$-dependent state in a finite-dimensional Hilbert space
-is described by a function
-$(s_0 - \epsilon, s_0 + \epsilon) \to \mathcal{H}: s \mapsto \ket{\psi(s)}$,
-which has a 1st derivative with respect to $s$ at $s=s_0$.
-Then $\chi_F(s_0)$ is well-defined, $\chi_{F_c}$ is well-defined for any
-orthogonal measurement basis, and
-\begin{equation}
-\mathbb{E}_{\textrm{measurements}} \chi_{F_c}(s_0) = \chi_F(s_0)/2,
-\end{equation}
+  Suppose $\ket{\psi(\lambda)}$ is a state defined in the
+  neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$ and differentiable at
+  $\lambda=\lambda_0$. Let $g$ be the corresponding fidelity metric
+  and $g_c$ be its classical counterpart dependent on a projective
+  measurement. then
+  \begin{equation}
+    \label{eq:Emeas}
+    \mathbb{E}_{\textrm{measurements}} g_c(\lambda_0) = g(\lambda_0) / 2,
+  \end{equation}
 where the expectation $E_{\textrm{measurements}}$ is taken accross
 all orthogonal bases in $\mathcal{H}$ using Haar measure (unique measure
 invariant with respect to unitary rotations).
 \VK{TODO: should ``measurements'' be italic in a formula inside a theorem?}
 \end{theorem}
 \begin{proof}
-\VK{TODO:4}
+  The second term in \eqref{eq:def.g:c} is only relevant when one of the
+  vectors in the measurement basis is orthogonal to $\ket{\psi(\lambda_0)}$
+  --- a subset of measure $0$ in the space of all measurements. Thus, we can
+  safely discard it in \eqref{eq:Emeas}. To simplify the proof we notice that
+  a quadratic form can be recovered from its values of the form
+  $g(\lambda_0)(v, v)$,
+  and both sides of the formula \eqref{eq:Emeas} are
+  invariant with respect to the choice of coordinates.
+  For a fixed $v$ we can always choose coordinates $\lambda$
+  such that $v = \partial_0$, $\lambda_0 = 0$. It remains to prove that
+  \begin{multline}
+    \label{eq:Emeas.1}
+    \mathbb{E}_{\textrm{measurements}}
+    \sum_{z}
+        \frac{
+          \left(\partial_{0} p_z(0)\right)^2
+        }{4 p_z(0)} \\
+    = \frac12 \norm{\ket{\partial_{0} \psi(0)}}^2
+        - \frac12 \abs{\braket{\partial_{0} \psi(0) | \psi(0)}}^2.
+  \end{multline}
+  One can simplify the l.h.s. by noting that the expectation of each term
+  in the sum is the same. Thus, it remains to integrate over $\ket{\varphi}$
+  s.t. $\norm{\ket{\varphi}} = 1$:
+  \begin{multline}
+    \textrm{l.h.s. of \eqref{eq:Emeas.1}}
+    = n\mathbb{E}_{\ket{\varphi}}
+      \frac{
+        \left(\real\left(
+        \braket{\varphi|\partial_{0} \psi(0)}
+        \braket{\psi(0)|\varphi}\right)\right)^2
+      }{\abs{\braket{\varphi|\psi(0)}}^2}.
+  \end{multline}
+  Let's denote
+    $\ket{\psi_0} = \ket{\psi(0)}$,
+    $\alpha_\parallel = \braket{\psi_0|\partial_0\psi(0)}/i \in \mathbb{R}$,
+    $\ket{\psi_\parallel} = i\alpha_\parallel\ket{\psi_0}$,
+    $\ket{\psi_\perp} = \ket{\partial_0\psi(0)} - \ket{\psi_\parallel}$.
+  With this notation
+  \begin{equation}
+    \textrm{r.h.s. of \eqref{eq:Emeas.1}} = \frac12 \norm{\ket{\psi_\perp}}^2,
+  \end{equation}
+  \begin{equation}
+    \braket{\varphi|\partial_{0} \psi(0)} \braket{\psi(0)|\varphi} = 
+    i \alpha_{\parallel} \abs{\braket{\varphi|\psi_0}}^2,
+  \end{equation}
+  \VK{TODO:0}
+  \begin{multline}
+    \textrm{l.h.s. of \eqref{eq:Emeas.1}}
+    = n\mathbb{E}_{\ket{\varphi}}
+      \frac{
+        \left(\real\left(
+        \braket{\varphi|\partial_{0} \psi(0)}
+        \braket{\psi(0)|\varphi}\right)\right)^2
+      }{\abs{\braket{\varphi|\psi(0)}}^2}.
+  \end{multline}
 \end{proof}
 
 \begin{theorem}
@@ -429,9 +782,9 @@ vs reconstruction from Bitstring-ChiFc method.
 \begin{center}
   \pgfmathparse{\columnwidth/20cm}%
   \edef\tikzscale{\pgfmathresult}%
-  \begin{tikzpicture}[scale=\tikzscale]
+  \begin{tikzpicture}[scale=\tikzscale, every node/.style={scale=\tikzscale}]
     % Bitstring-ChiFc: Lanczos (almost exact) vs our method (estimate).
-    \draw (0, 0) node {\includegraphics[width=\columnwidth]{ladder-ed-chifc.png}};
+    \draw (0, 0) node {\includegraphics{ladder-ed-chifc.png}};
     \draw[blue, line width=0.4mm] (-0.05, -4.8) -- (-0.05, 4.8);
     \draw (0.28, -4.8) -- (0.28, 4.8);
     \draw (-2.3, -3.9) node[align=right] {predicted\\phase transition\\(using 140140 bitstrings)};
@@ -557,5 +910,8 @@ TODO: models
 TODO: experiments
 
 \VK{TODO:2: 2nd part of the presentation with an image: presentation is a more low-low hanging fruit.}
+
+\bibliography{biblio.bib}
+\bibliographystyle{apsrev4-1}
 
 \end{document}
