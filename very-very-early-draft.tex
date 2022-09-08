@@ -1,4 +1,6 @@
-\documentclass[american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress]{revtex4-2}
+\documentclass[
+  american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress
+]{revtex4-2}
 % General document formatting
 \usepackage{tikz}
 \usepackage[margin=0.7in]{geometry}
@@ -21,6 +23,7 @@
 \DeclareMathOperator{\real}{Re}
 \DeclareMathOperator{\imag}{Im}
 \DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\mspan}{span}
 %\DeclareMathOperator{\arg}{arg}
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\norm}[1]{\left\|#1\right\|}
@@ -347,7 +350,7 @@ to the second order.
 \end{equation}
 The resulting second term represents a metric
 \begin{equation}
-\label{eq:def.gmetric}
+  \label{eq:def.gmetric}
   g = \sum_{\mu\nu} g_{\mu\nu} d\lambda^\mu d\lambda^\nu.
 \end{equation}
 The metric $g$ described by \eqref{eq:def.gF} and \eqref{eq:def.gmetric}
@@ -360,6 +363,8 @@ of a fixed size. Therefore, we are interested in identifying the vectors
 $\varphi$ on $\mathcal{M}$ with high values of
 $g(\varphi, \varphi) / g_0(\varphi, \varphi)$,
 where $g_0$ is a metric considered to be non-singular.
+We also note that \eqref{eq:def.gmetric} is $1/4$ of Fisher Information Metric
+for the case of classical fidelity when for all $z$ we have $p_z > 0$.
 
 \begin{theorem}
   \label{th:def.g}
@@ -405,6 +410,7 @@ where $g_0$ is a metric considered to be non-singular.
       \end{multline}
       In that expression the second term can be bounded from below by
       \begin{equation}
+        \label{eq:g2bound}
         \real\left(
           P_0 \left(\partial_\mu\rho^*(\lambda_0)\right)
           P_{+}^* \left(\rho_{+}(\lambda_0)\right)^{-1}
@@ -425,7 +431,7 @@ where $g_0$ is a metric considered to be non-singular.
       at $\lambda = \lambda_0$ and $\sum_{z\in\mathcal{S}_0} p_z(\lambda)$
       has the second derivative at $\lambda = \lambda_0$. Then
       \begin{multline}
-        \label{eq:def.g:c}
+        \label{eq:gmunu.c}
         g_{\mu\nu}(\lambda_0) = \sum_{z\in\mathcal{S}_{+}}
         \frac{
           \left(\partial_{\mu} p_z(\lambda_0)\right)
@@ -447,7 +453,10 @@ and the usage of the fact that the Hilbert
 space elements representing the states have the norm of 1. Since we do
 not require the second derivative to exist, we have to do that expansion
 with a bit more care than \cite{zanardi2007information}, as spelled out
-in the proof below.
+in the proof below. Note also that part 2 is a generalization of part 1,
+and the proof for part 2 won't use part 1, hence we could just leave
+the proof for part 2. However, the proof for part 1 is much simpler,
+so we leave it here.
 \begin{proof}[Proof of part 1]
   Due to equivariance of the definition of $g_{\mu\nu}$ with respect to
   the change of the coordinates $\lambda \mapsto \lambda - \lambda_0$,
@@ -673,9 +682,10 @@ Note that part 3 trivially follows from part 2 when applied to diagonal $\rho$.
 
 \VK{The third term is weird.
 Consider an example where $\mathcal{S} = \{0, 1\}$, $\mathcal{M} = \mathbb{R}$,
-$p_0 = \sin^2(\theta)$, $p_1 = \cos^2(\theta)$. Then $g = (1 + \delta_{\theta,0}) ds^2$.}
+$p_0 = \sin^2(\theta)$, $p_1 = \cos^2(\theta)$. Then $g = (1 + \delta_{\sin(4\theta),0}) ds^2$.}
 
 \begin{theorem}
+  \label{th:avggc}
   Suppose $\ket{\psi(\lambda)}$ is a state defined in the
   neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$ and differentiable at
   $\lambda=\lambda_0$. Let $g$ be the corresponding fidelity metric
@@ -691,7 +701,7 @@ invariant with respect to unitary rotations).
 \VK{TODO: should ``measurements'' be italic in a formula inside a theorem?}
 \end{theorem}
 \begin{proof}
-  The second term in \eqref{eq:def.g:c} is only relevant when one of the
+  The second term in \eqref{eq:gmunu.c} is only relevant when one of the
   vectors in the measurement basis is orthogonal to $\ket{\psi(\lambda_0)}$
   --- a subset of measure $0$ in the space of all measurements. Thus, we can
   safely discard it in \eqref{eq:Emeas}. To simplify the proof we notice that
@@ -712,7 +722,7 @@ invariant with respect to unitary rotations).
         - \frac12 \abs{\braket{\partial_{0} \psi(0) | \psi(0)}}^2.
   \end{multline}
   One can simplify the l.h.s. by noting that the expectation of each term
-  in the sum is the same. Thus, it remains to integrate over $\ket{\varphi}$
+  in the sum is the same. Thus, it remains to average over $\ket{\varphi}$
   s.t. $\norm{\ket{\varphi}} = 1$:
   \begin{multline}
     \textrm{l.h.s. of \eqref{eq:Emeas.1}}
@@ -725,55 +735,229 @@ invariant with respect to unitary rotations).
   \end{multline}
   Let's denote
     $\ket{\psi_0} = \ket{\psi(0)}$,
-    $\alpha_\parallel = \braket{\psi_0|\partial_0\psi(0)}/i \in \mathbb{R}$,
-    $\ket{\psi_\parallel} = i\alpha_\parallel\ket{\psi_0}$,
-    $\ket{\psi_\perp} = \ket{\partial_0\psi(0)} - \ket{\psi_\parallel}$.
-  With this notation
+    $\psi_\parallel = \braket{\psi_0|\partial_0\psi(0)}$,
+    $\ket{\psi_\perp} = \ket{\partial_0\psi(0)} - \psi_\parallel\ket{\psi_0}$,
+    $\varphi_\parallel = \braket{\psi_0|\varphi}$,
+    $\ket{\varphi_\perp} = \ket{\varphi} - \varphi_\parallel\ket{\psi_0}$.
+    Note that $\real(\psi_\parallel) = 0$.  With this notation
   \begin{equation}
     \textrm{r.h.s. of \eqref{eq:Emeas.1}} = \frac12 \norm{\ket{\psi_\perp}}^2,
   \end{equation}
   \begin{equation}
     \braket{\varphi|\partial_{0} \psi(0)} \braket{\psi(0)|\varphi} = 
-    i \alpha_{\parallel} \abs{\braket{\varphi|\psi_0}}^2,
+    \abs{\varphi_\parallel}^2 \psi_\parallel
+    + \varphi_\parallel \braket{\varphi_\perp|\psi_\perp}.
   \end{equation}
-  \VK{TODO:0}
-  \begin{multline}
+  Substituting this and averaging over arguments of $\varphi_\parallel$
+  we get
+  \begin{equation}
     \textrm{l.h.s. of \eqref{eq:Emeas.1}}
-    = n\mathbb{E}_{\ket{\varphi}}
-      \frac{
-        \left(\real\left(
-        \braket{\varphi|\partial_{0} \psi(0)}
-        \braket{\psi(0)|\varphi}\right)\right)^2
-      }{\abs{\braket{\varphi|\psi(0)}}^2}.
-  \end{multline}
+    = \frac{n}{2}\mathbb{E}_{\ket{\varphi}}
+      \abs{\braket{\varphi_\perp|\psi_\perp}}^2
+    = \frac12 \norm{\psi_\perp}^2.
+  \end{equation}
 \end{proof}
 
+Given theorem \ref{th:avggc} is for pure states, one could wonder
+whether a similar statement is true for mixed states. In general the answer
+is negative. Moreover, it is possible to find a special case where
+the average of the classical fidelity is 0 while the quantum fidelity
+is non-zero:
+\begin{equation}
+  \rho(\lambda) =
+    \begin{pmatrix}
+      1 - \abs{\lambda}^2 & 0 \\
+      0 & \abs{\lambda}^2
+    \end{pmatrix}
+\end{equation}
+gives $g_{\mu\nu}(0) = 1$ while apart for one specific measurement basis where
+one measures $\rho$ along the coordinates in which it is given
+the classical fidelity is $0$ at $\lambda=0$ due to vanishing first derivatives.
+Such extreme examples are rare. Indeed, the example relies on the bound
+\eqref{eq:g2bound} not being an equality, hence the rank of $\rho$
+being higher in the neighbourhood of a point where similar example applies
+along the direction for which it applies. In one dimension that
+a set of such values of $\lambda$ has to be discrete, in any number of
+dimensions it has to have measure $0$.
+
+In today's quantum annealer, though, the measurement basis is not random:
+instead, there is a fixed basis called ``computational basis'' in which
+all measurements are performed. At the same time, today's quantum annealers
+have a limited set of biases and couplings allowed to the user. Below theorem
+shows, that in this case too for pure states classical fidelity almost
+everywhere is a good approximator of quantum fidelity. Even better, in this
+case they are equal!
+The main restriction on the Hamiltonian is that its matrix elements are
+real, something which is true e.g. for $X$ and $Z$ biases,
+and $XX$, $YY$, and $ZZ$ couplings.
 \begin{theorem}
-Suppose there is a Hamiltonian $H(s)$ acting on a finite-dimensional Hilbert
-space $\mathcal{H}$ with a basis $\{e_j\}_{j=1}^{d}$, which we will call
-``computational basis''. \VK{TODO:5}
-\begin{itemize}
-  \item .
-  \item a non-degenerage ground state $\ket{\psi(s)}$.
-\end{itemize}
+  \label{th:comput.basis}
+  \begin{itemize}
+    \item Suppose there is a continuously differentiable
+      Hamiltonian $H(\lambda)$ acting on a
+      finite-dimensional Hilbert space $\mathcal{H}$ with a basis which we
+      will call ``computational basis''. Assume that matrix elements of the
+      Hamiltonian are real in that basis. Also assume that the ground state of
+      that Hamiltonian is non-degenerate.
+      Then the ground state could be chosen to have real elements and
+      continuously differentiable w.r.t. $\lambda$.
+      elements.
+    \item For a state differentiable w.r.t. $\lambda$ with real matrix elements,
+      fidelity susceptibility metric coincides with its classical counterpart.
+  \end{itemize}
 \end{theorem}
 \begin{proof}
-\VK{TODO:4}
+  First, let's fix $\lambda$ and show that the ground state can be picked
+  to be real for a Hamiltonian with real matrix elements.
+  Indeed, let $\ket{\psi}$ be the ground
+  state with ground energy $\epsilon_0$. We can represent it as
+  \begin{equation}
+    \ket{\psi} = \cos(\theta) \ket{\psi_0} + i\sin(\theta) \ket{\psi_1},
+  \end{equation}
+  where both $\ket{\psi_j}$ are normalized and have
+  real vector elements, then we have
+  \begin{multline}
+    \epsilon_0 = \braket{\psi|H(\lambda)|\psi} \\
+    = \cos^2(\theta) \braket{\psi_0|H(\lambda)|\psi_0}
+      + \sin^2(\theta) \braket{\psi_1|H(\lambda)|\psi_1} \\
+    \geq \epsilon_0 (\cos^2(\theta) + \sin^2(\theta))
+    = \epsilon_0.
+  \end{multline}
+  Here the inequality is due to the fact that $\epsilon_0$ is the
+  lowest energy level of $H(\lambda)$. Since it has to be an equality,
+  we have
+  \begin{equation}
+    \braket{\psi_0|H(\lambda)|\psi_0} = \epsilon_0
+      \textrm{ or } \cos(\theta) = 0,
+  \end{equation}
+  \begin{equation}
+    \braket{\psi_1|H(\lambda)|\psi_1} = \epsilon_0
+      \textrm{ or } \sin(\theta) = 0.
+  \end{equation}
+  Thus, at least one of $\psi_0$ or $\psi_1$ is the ground state
+  with real vector elements.
+  We can now finish the proof of part 1 by first applying implicit function
+  theorem to $\det(H(\lambda) - \epsilon_0(\lambda))$ to show
+  $\epsilon_0(\lambda)$ is differentiable, and then
+  applying implicit function theorem to the system of equations obtained
+  from $(H(\lambda) - \epsilon_0) \ket{\psi(\lambda)}$ by replacing
+  one of the redundant rows with the equation
+  \begin{equation}
+    \norm{\ket{\psi(\lambda)}}^2 = 1.
+  \end{equation}
+
+  To prove the second part, notice that for the same reason as in the proof
+  of theorem \ref{th:avggc}, it is sufficient to prove it for $g_{00}$.
+  Then expanding both \eqref{eq:gmunu.pure} and \eqref{eq:gmunu.c} for
+  a state with real vector elements, we get the same expression
+  \begin{equation}
+    g_{00}(\lambda) = \norm{\ket{\partial_0\psi(\lambda)}}^2.
+  \end{equation}
 \end{proof}
 
+On the other hand, Hamiltonians with non-real matrix elements
+can have $\chi_{F_c}(s) = 0$ with non-zero $\chi_F(s)$. For example,
+consider
+\begin{equation}
+  H(s) = - (1-s) \sum_j X_j - s \sum_j Y_j.
+\end{equation}
+The eigenstate is $\ket{\psi(s)} = \ket{\psi_0(s)}^{\otimes n}$, where
+\begin{equation}
+  \ket{\psi_0(s)} = \frac1{\sqrt2} \left(
+    \ket{0} + \frac{(1-s) + is}{\sqrt{1-2s(1-s)}}\ket{1}\right).
+\end{equation}
+These states generate uniform probability distribution independent of $s$
+when measured in the computational basis. However, the state does change
+with $s$, hence it has non-zero
+\begin{equation}
+  g(s) = \frac{n}{4} \left(d \arctan\left(\frac{s}{1-s}\right)\right)^2 =
+  \frac{n\;ds^2}{4(1-2s(1-s))^2}.
+\end{equation}
+
 \subsection{Resolution of issue 3}
-As we have seen in \VK{TODO: ref}, \VK{TODO: ref}, \VK{TODO: ref}
+As we have seen in theorems \ref{th:avggc} and \ref{th:comput.basis},
 classical fidelity susceptibility is expected to be between $\frac12 \chi_F(s)$
 and $\chi_F(s)$ in many cases of interest. Thus, there is a hope that the
 maximum of classical fidelity susceptibility would be close to the maximum
-of fidelity susceptibility in cases of interest. In particular,
-the Hamiltonians which could be implemented on the current quantum annealers
-are stoquastic and, in particular, have real matrix elements in the computational
+of fidelity susceptibility in cases of interest. In particular, the
+Hamiltonians which could be implemented on the current quantum annealers are
+stoquastic and, in particular, have real matrix elements in the computational
 basis. Thus if the ground state is non-degenerate $\chi_{F_c}(s) = \chi_F(s)$
-almost everywhere for
-the ground state and no information is lost when replacing $\chi_F(s)$ with
-$\chi_{F_c}(s)$ (for almost all values of $s$) if we are looking for
-phase transitions at zero temperature.
+for the ground state and no information is lost when replacing $\chi_F(s)$ with
+$\chi_{F_c}(s)$ if we are looking for phase transitions at zero temperature.
+\VK{TODO: should we use here $g_c(s) = g(s)$? Should we then explain above
+that we plan to use $g_c$ for classical fidelity susceptibility metric
+whenever we want to avoid the ambiguity with the fidelity susceptibility?}
+
+Thus, we can reformulate the setting of the paper as the challenge
+between two approaches for identifying the maximums of $\chi_F(s)$.
+The first approach is to use classical state of the art algorithms.
+The second approach involves the following steps.
+\begin{itemize}
+  \item Use a quantum annealer to produce a dataset of pairs $(s,z)$,
+    where $s$ is a value of the parameter and $z$ is a bitstring
+    measured in the computational basis.
+  \item Use an ML-based method, which we call Bitstring-ChiFc,
+    to produce an estimate
+    $\widehat\chi_{F_c}(s)$ of $\chi_{F_c}(s)$.
+    See \VK{TODO} for the description of the method.
+  \item Find local maxima $\hat s_{\textrm{critical},i}$ of the estimate.
+  \item If necessary, refine the estimates $\hat s_{\textrm{critical}}$
+    by repeating the algorithm with a smaller range of values of $s$
+    around $\hat s_{\textrm{critical}}$.
+\end{itemize}
+
+Now we move to describe classical algorithms and their performance in this
+task.
+
+\subsection{Classical algorithm: Lanczos}
+If we are interested in the fidelity suceptibility associated
+to the ground states of the Hamiltonian, and the system size is small,
+one of the powerful classical algorithms is based on Lanczos algorithm.
+In the context of this algorithm we think about $H(\lambda)$ as
+a sparse $2^n$ by $2^n$ matrix together with an algorithm to compute
+$H(\lambda)\ket{\psi}$ for a vector $\ket{\psi}$ of the length $2^n$.
+Typically, Hamiltonians we consider have
+$\Theta(n)$ terms and the computation $H(\lambda)\ket{\psi}$
+takes $\Theta(n2^n)$ time. Lanczos algorithm starts from
+a random vector $\ket{\psi}$ and an integer $k$ (typically,
+$k$ is of the order of 40). In exact arithmetic the algorithm would
+return a unit vector $\ket{\varphi}$ from
+$\mspan(\{H(\lambda)^j\ket{\psi}: j=0,\dots,k-1\})$
+s.t. $\norm{\ket{\varphi}} = 1$ and $\braket{\varphi|H(\lambda)|\varphi}$
+is the smallest possible. In practice, one performs the algorithm
+using floating point numbers which causes an additional source of errors.
+In fact, the Lanczos algorithm currently used in practice is different
+from the one originally proposed by Lanczos, with most of the differences
+intended to make the algorithm more resilient to numerical errors of
+finite precision arithmetics while minimizing the additional computational
+cost spent on these efforts.
+
+One then would apply the algorithm for values of parameters on a grid
+and estimate the fidelity susceptibility directly. E.g. if $H$ depends
+on a single parameter $s\in[0,1]$ one could choose the number of points $N$
+and compute $H(s)$ for $s\in\{j/N: j=0,\dots,N\}$, then estimate
+\begin{equation}
+  \hat \chi_F(s + \Delta s/2)
+    \simeq 2 (1 - \abs{\braket{\varphi(s)| \varphi(s + \Delta s)}})
+      / \Delta s^2,
+\end{equation}
+where $\Delta s = 1/N$, $s = j/N$, $j=0,\dots,N-1$.
+
+The main downside of this approach is the need to perform $k$
+multiplications of $H(\lambda)$ by a vector of size $2^n$, something
+which typically takes time $\Theta(kn2^n)$, in each of $N$ executions
+of the Lanczos algorithm. In practice, that means that
+this method is the go to method for $n \leq 20$, being able to estimate
+the fidelity to a good enough accuracy for $n=20$ in under 2 hours on a
+single machine but impractical for $n > 40$.
+
+There are cases where it fails due to either algorithmic or numerical issues,
+especially if the gap between the ground state and first excited state is small,
+or there is a large number of energy levels close to ground state energy.
+However, in these cases other algorithms we reviewed would typically fail
+as well and such failures could be easily detected by running the algorithm
+with a different initial random state.
 
 \subsection{Results}
 Here is the comparison based on Lanczos diagonalization for L=10 (20-qubit)
