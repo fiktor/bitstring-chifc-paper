@@ -59,9 +59,16 @@ compared to the number of possible bitstrings.
 
 \maketitle
 
-\section{Presentation}
+\section{Introduction}
+\DL{Give a general introduction to the problem we wish to solve and include pertinent background with citations. In particular, we need to address the computational complexity }
+
 \subsection{Challenge: finding phase transitions}
-Let's talk about phase transitions.  Consider the Hamiltonian
+%%DL too colloquial
+%Let's talk about phase transitions.  
+
+\DL{Presentation of this Hamiltonian should come later, when we discuss a specific example. Or, you can use it in the introduction to motivate some of the specific questions we're attempting to answer, but then refer to it explicitly in terms of some specific aspects of the phase diagram.}
+
+Consider the Hamiltonian
 on a $2 \times L$ lattice given by the following equations.
 \begin{equation}
   \label{eq:Hladder.1}
@@ -119,25 +126,31 @@ following equations.
 \end{equation}
 
 These are called ``staggered magnetization of the top row'' and ``magnetization
-of the bottom row'' respectively. For $L=10$ we can compute these for various
-values of the parameters of the Hamiltonian and produce the following diagrams:
-\includegraphics[width=\columnwidth]{lanczos_chi0_gp.png}
+of the bottom row'' respectively. We can compute these magnetizations for various
+values of the parameters of the Hamiltonian for $L=10$ and produce the
+following diagrams:
+
+\includegraphics[width=\dimexpr\columnwidth-10.0pt]{lanczos_chi0_gp.png}
 
 \VK{The following statement is in the direct contradiction with the statement
 that the main goal of this paper is to learn Fisher Information Metric
 given a dataset of bitstrings.}
 In this work we focus on the task of identifying phase transitions in a
-family of Hamiltonians $\{H_{\lambda}\}_{\lambda \in \Lambda}$ on a finite
-set of qubits given an access to an oracle capable, given $\lambda \in \Lambda$,
-of producing bitstrings measured in a computational basis from a state sampled
+family of Hamiltonians $\{H_{\lambda}\}_{\lambda \in \Lambda}$ acting on a finite
+set of qubits, and given access to an oracle capable -- given $\lambda \in \Lambda$ --
+of producing bitstrings measured in the computational basis from a state sampled
 from a low temperature distribution corresponding to the Hamiltonian
-$H_{\lambda}$. Specifically, the main goal of this paper is to make some
+$H_{\lambda}$. 
+%Specifically, 
+\DL{The following sentence is very generic; it describes almost all attempts to demonstrate a quantum advantage. It can be moved to the very beginning of the introduction, or even deleted altogether.}
+More generally,
+the main goal of this paper is to make some
 progress towards attempting to understand whether algorithms using
 quantum computers can have an advantage over algorithms using the
 same amount of resources but running on
-purely classical hardware as illustrated on the following diagram.
+purely classical hardware as illustrated in the following diagram.
 \begin{center}
-  \pgfmathparse{\columnwidth/13cm}%
+  \pgfmathparse{\columnwidth/13.37cm}%
   \edef\tikzscale{\pgfmathresult}%
   \begin{tikzpicture}[scale=\tikzscale]
     \newlength{\ux}
@@ -160,7 +173,7 @@ purely classical hardware as illustrated on the following diagram.
   \end{tikzpicture}
 \end{center}
 \VK{TODO: the idea of classical and quantum ``robots'' was taken from some
-paper (probably Preskill). Find and cite that paper}
+paper (probably Preskill). Find and cite that paper} \DL{yes: Fig.1 of https://www.science.org/doi/10.1126/science.abn7293}
 
 More specifically, throughout this work we consider algorithms attempting
 to take an advantage of quantum computer having a specific structure. First,
@@ -174,7 +187,7 @@ where the classical part of the algorithm can produce additional requests
 (values of the parameters and counts of samples requested) for the quantum
 annealer generating bitstrings.
 \begin{center}
-  \pgfmathparse{\columnwidth/13cm}%
+  \pgfmathparse{\columnwidth/13.37cm}%
   \edef\tikzscale{\pgfmathresult}%
   \begin{tikzpicture}[scale=\tikzscale]
     \setlength{\ux}{15mm}
@@ -244,7 +257,7 @@ given by density matrices $\rho$ and $\sigma$ is
   F(\rho, \sigma) = \Tr\left(\sqrt{\sqrt{\sigma}\rho\sqrt{\sigma}}\right).
 \end{equation}
 By definition classical fidelity between two discrete probability distributions
-$p$ adn $q$
+$p$ and $q$
 \begin{equation}
 \label{eq:def.Fc}
   F_c(p, q) = \sum_z \sqrt{p_z q_z}.
@@ -383,18 +396,18 @@ for the case of classical fidelity when for all $z$ we have $p_z > 0$.
         - \braket{\partial_\mu \psi(\lambda_0) | \psi(\lambda_0)}
           \braket{\psi(\lambda_0) | \partial_\nu \psi(\lambda_0)},
       \end{multline}
-      where $\partial_\mu \psi(\lambda_0)$ is a compact notation for
+      where $\partial_\mu \psi(\lambda_0)$ is a compact notation for the derivative
       $\left.\frac{\partial \psi(\lambda)}{\partial \lambda^\mu}
       \right|_{\lambda=\lambda_0}$.
     \item Suppose $\rho(\lambda)$ is a density matrix defined in the
       neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$, has the first
-      derivative at $\lambda = \lambda_0$, and $\Tr(P_0 \rho(\lambda) P_0^*)$
+      derivative at $\lambda = \lambda_0$, and $\Tr(P_0 \rho(\lambda) P_0^{\dagger})$
       has the second derivative
       at $\lambda = \lambda_0$, where $P_0$ is the orthogonal
       projector $\mathcal{H} \to \ker\rho(\lambda_0)$.
       Let $P_{{+}}$ be the orthogonal projector
       $\mathcal{H} \to \rho(\lambda_0)(\mathcal{H})$,
-      $\rho_{+}(\lambda) = P_{{+}} \rho(\lambda) P_{{+}}^*$.
+      $\rho_{+}(\lambda) = P_{{+}} \rho(\lambda) P_{{+}}^{\dagger}$.
       Then in the basis where
       $\rho_{+}(\lambda_0) = \diag(\xi_0,\dots,\xi_{n_{+}})$
       we have
@@ -406,16 +419,16 @@ for the case of classical fidelity when for all $z$ we have $p_z > 0$.
               (\partial_\nu\rho_{+}(\lambda_0))_{kj}
             \right)
           }{2(\xi_j + \xi_k)}\\
-        + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^*)
+        + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^{\dagger})
           \right|_{\lambda=\lambda_0}.
       \end{multline}
       In that expression the second term can be bounded from below by
       \begin{equation}
         \label{eq:g2bound}
         \real\left(
-          P_0 \left(\partial_\mu\rho^*(\lambda_0)\right)
-          P_{+}^* \left(\rho_{+}(\lambda_0)\right)^{-1}
-          P_{+} \left(\partial_\nu\rho(\lambda_0)\right) P_0^*
+          P_0 \left(\partial_\mu\rho(\lambda_0)\right)
+          P_{+}^{\dagger} \left(\rho_{+}(\lambda_0)\right)^{-1}
+          P_{+} \left(\partial_\nu\rho(\lambda_0)\right) P_0^{\dagger}
         \right).
       \end{equation}
       If the bound is not an equality along some vector $\phi$ tangent to
@@ -517,7 +530,7 @@ so we leave it here.
   \label{lm:block-diagonal}
   Let
   \begin{equation}
-    M = \begin{pmatrix}A & B \\ B^* & B^* A^{-1} B + C\end{pmatrix}
+    M = \begin{pmatrix}A & B \\ B^{\dagger} & B^{\dagger} A^{-1} B + C\end{pmatrix}
   \end{equation}
   be a finite-dimensional block diagonal matrix over $\mathbb{C}$ with
   positive definite $A$.
@@ -528,12 +541,13 @@ so we leave it here.
   The lemma follows from the decomposition
   \begin{equation}
     M =
-      \begin{pmatrix}A & B \\ 0 & 1\end{pmatrix}^*
+      \begin{pmatrix}A & B \\ 0 & 1\end{pmatrix}^{\dagger}
       \begin{pmatrix}A^{-1} & 0 \\ 0 & C\end{pmatrix}
       \begin{pmatrix}A & B \\ 0 & 1\end{pmatrix}.
   \end{equation}
 \end{proof}
 
+For part 2 see, e.g., \cite[section 15.1]{bengtsson_zyczkowski_2017}.
 \begin{proof}[Proof of part 2]
   As in the previous proof, without loss of generality set $\lambda_0 = 0$.
   Denote $\rho_0 = \rho(0)$, $\delta \rho = \rho(\delta \lambda) - \rho_0$.
@@ -553,10 +567,9 @@ so we leave it here.
     F(\rho_0, \rho_0 + \delta \rho) =
     \Tr \sqrt{\rho_0^2 + \sqrt{\rho_0} \delta \rho \sqrt{\rho_0}}.
   \end{equation}
-  Let $\rho_{0{+}} = P_{{+}} \rho_0 P_{{+}}^*$,
-  $\delta\rho_{+} = P_{{+}} \delta\rho P_{{+}}^*$,
-  \VK{TODO: should adjoint be $\bullet^*$ or $\bullet^\dagger$?}
-  $r_{+} = P_{{+}} r P_{{+}}^*$. One can see that the expression under the
+  Let $\rho_{0{+}} = P_{{+}} \rho_0 P_{{+}}^{\dagger}$,
+  $\delta\rho_{+} = P_{{+}} \delta\rho P_{{+}}^{\dagger}$,
+  $r_{+} = P_{{+}} r P_{{+}}^{\dagger}$. One can see that the expression under the
   square root acts nontrivially only on $\rho_0(\mathcal{H})$, hence the trace
   can be computed in that subspace:
   \begin{equation}
@@ -648,22 +661,22 @@ so we leave it here.
   hence $\Tr(r_{+}) + \Tr(P_0 r P_0) = 0$, giving
   \begin{equation}
     \label{eq:TrI1}
-    \Tr(I_1) = - \Tr(P_0 r P_0^*) / 2.
+    \Tr(I_1) = - \Tr(P_0 r P_0^{\dagger}) / 2.
   \end{equation}
   Note that according to lemma \ref{lm:block-diagonal}
   \begin{multline}
-    P_0 r P_0^*
-    \geq \left(P_{+} \delta\rho P_0^*\right)^* \rho_{0{+}}^{-1}
-      P_{+} \delta\rho P_0^* \\
+    P_0 r P_0^{\dagger}
+    \geq \left(P_{+} \delta\rho P_0^{\dagger}\right)^{\dagger}
+    \rho_{0{+}}^{-1} P_{+} \delta\rho P_0^{\dagger} \\
     = \sum_{\mu,\nu} \real\left(
-        P_0 \left(\partial_\mu\rho^*(0)\right)
-        P_{+}^* \rho_{0{+}}^{-1}
-        P_{+} \left(\partial_\nu\rho(0)\right) P_0^*
+        P_0 \left(\partial_\mu\rho(0)\right)
+        P_{+}^{\dagger} \rho_{0{+}}^{-1}
+        P_{+} \left(\partial_\nu\rho(0)\right) P_0^{\dagger}
       \right)
       \delta\lambda^\mu \delta\lambda^\nu \\
     + o(\abs{\delta \lambda}^2).
   \end{multline}
-  Here $\real(a) = (a + a^*) / 2$ for a matrix or an operator $a$.
+  Here $\real(a) = (a + a^{\dagger}) / 2$ for a matrix or an operator $a$.
   Combining \eqref{eq:I2jj} and \eqref{eq:TrI1} we get
   \begin{multline}
     g_{\mu\nu}(0)
@@ -673,8 +686,8 @@ so we leave it here.
           (\partial_\nu\rho_{+}(0))_{kj}
         \right) \xi_k
       }{(\xi_j + \xi_k)^2}\\
-    + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^*)
-      \right|_{\lambda=0}.
+    + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda)
+    P_0^{\dagger}) \right|_{\lambda=0}.
   \end{multline}
   The remaining statements of the part 2 of the theorem follow from the
   lemma \ref{lm:block-diagonal}.
@@ -965,7 +978,7 @@ Here is the comparison based on Lanczos diagonalization for L=10 (20-qubit)
 frustrated ladder Hamiltonian with $K=U=1$: ground truth from Lanczos
 vs reconstruction from Bitstring-ChiFc method.
 \begin{center}
-  \pgfmathparse{\columnwidth/20cm}%
+  \pgfmathparse{\columnwidth/20.79cm}%
   \edef\tikzscale{\pgfmathresult}%
   \begin{tikzpicture}[scale=\tikzscale, every node/.style={scale=\tikzscale}]
     % Bitstring-ChiFc: Lanczos (almost exact) vs our method (estimate).
@@ -1053,8 +1066,11 @@ A solution to that is to look at Fisher information metric: high distances accor
 \section{Bitstring-ChiFc method}
 In this work we propose the following method:
 \begin{itemize}
-  \item Collect training dataset $\mathcal{D}_{\chi_{F_c}\textrm{-train}}$ of
-  the form $(\lambda_0, \delta \lambda, z, y)$, where $z$ is sampled from
+  \item Collect a training dataset
+  \begin{equation}
+    \mathcal{D}_{\chi_{F_c}\textrm{-train}} = \{(\lambda_0, \delta \lambda, z, y),\dots\},
+  \end{equation}
+  where $z$ is sampled from
   $p(\bullet, \lambda=\lambda_{z})$,
   $p_{+} = p(\lambda_{z} = \lambda_0 + \delta \lambda / 2| \lambda_{z} = \lambda_0 \pm \delta \lambda / 2)$, and
     $\mathbb{E}(y|\lambda_0, \delta \lambda, z) = p_{+}$.
@@ -1076,12 +1092,70 @@ In this work we propose the following method:
   $\mathcal{D}_{\chi_{F_c}\textrm{-train}}$.
   \item Estimate
   \begin{multline}
-  \chi_{F_c}^{jk}(\lambda) = \smoothen\Bigl(
+  \label{eq:chifc-from-M}
+  \left(\hat g_{c}\right)_{\mu\nu}(\lambda) = \smoothen\Bigl(
   \lambda_1 \mapsto \mean_{(z, \lambda_1) \in \mathcal{D}_{\textrm{train}}}
   \bigl(\\
-  M(\lambda_1, 0, z)_{j}M(\lambda_1, 0, z)_{k}\bigr)\Bigr)(\lambda).
+  M(\lambda_1, 0, z)_{\mu}M(\lambda_1, 0, z)_{\nu}\bigr)\Bigr)(\lambda).
   \end{multline}
 \end{itemize}
+
+\subsection{Justification for the formula for Bitstring-ChiFc method.}
+Here we justify the formula used for Bitstring-ChiFc
+method.
+\begin{theorem}
+    Assume that the model $M$ is continuous with respect to
+    $\delta \lambda$ and
+    has the best possible out of sample performance
+    near $\delta \lambda = 0$.
+    Then
+    \begin{equation}
+      \label{eq:chifc-from-M-perfect}
+      \left(g_{c}\right)_{\mu\nu}(\lambda) =
+        \mathbb{E}_{(z, \lambda) \in \mathcal{D}}
+        \left(
+          M(\lambda, 0, z)_{\mu}M(\lambda, 0, z)_{\nu}
+        \right).
+    \end{equation}
+\end{theorem}
+In some sense the theorem justifies the use of formula
+\eqref{eq:chifc-from-M}: it essentially shows that if the model
+is perfect, and the dataset used in \eqref{eq:chifc-from-M} is
+infinite, then that formula \eqref{eq:chifc-from-M} without the
+smoothing gives a perfect estimate for the classical fidelity
+susceptibility metric $g_c$. Of course, in reality these assumptions are not realistic: the model is not perfect, the dataset is finite, and the smoothing is necessary to dampen high frequency noise arising from the finite dataset size.
+\VK{TODO: Should we discuss the imperfections
+in a later subsection?}
+\begin{proof}
+  Both lhs and rhs of \eqref{eq:chifc-from-M-perfect} are 
+  quadratic forms equivariant under the rotations of the 
+  coordinate system of the parameter space. Therefore,
+  it is sufficient to show they are equal for $\mu = \nu = 0$.
+  That is, it is sufficient to prove the theorem in the scalar 
+  case, where $\lambda$ consists of a single parameter $s$.
+  In this case \eqref{eq:chifc-from-M-perfect} takes the form
+  \begin{equation}
+      \label{eq:chifc-from-M-perfect-s}
+      \chi_{F_c}(s) =
+        \mathbb{E}_{(z, s) \in \mathcal{D}} \left(
+        M(s, 0, z)^2\right).
+  \end{equation}
+  By definition \eqref{eq:def.chiFc} and \eqref{eq:def.Fc} we
+  have
+  \begin{multline}
+    \chi_{F_c}(s) = \lim_{\delta s \to 0} \frac{2}{\delta s^2}
+    \Biggl(\\
+      1-\sum_{z} \sqrt{P(z|s - \delta s / 2) P(z|s+\delta s/2)}
+    \Biggr).
+  \end{multline}
+  Let's introduce the distribution $Q$ on bitstrings $z$
+  by $Q(z) = (P(z|s - \delta s / 2) + P(z|s+\delta s/2)) / 2$.
+  \VK{TODO:0}
+\end{proof}
+Then we show that under these (unrealistic) assumptions
+the formula \eqref{eq:chifc-from-M}
+without the smoothing part produces the perfect estimate for $\chi_{F_c}$.
+By definition, we have
 
 \VK{TODO:2: expand the explanation for $s$ instead of $\lambda$.}
 
