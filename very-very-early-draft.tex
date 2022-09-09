@@ -32,6 +32,8 @@
 
 \newcommand{\bes} {\begin{subequations}}
 \newcommand{\ees} {\end{subequations}}
+\newcommand{\beq} {\begin{equation}}
+\newcommand{\eeq} {\end{equation}}
 
 
 % Draft comments
@@ -169,72 +171,6 @@ lattice size, since, by definition, TODO:0}
 \section{Relation to phase transitions}
 \subsection{Challenge: finding phase transitions}
 
-\DL{Presentation of this Hamiltonian should come later, when we discuss a specific example. Or, you can use it in the introduction to motivate some of the specific questions we're attempting to answer, but then refer to it explicitly in terms of some specific aspects of the phase diagram.}
-
-Consider the Hamiltonian
-on a $2 \times L$ lattice given by the following equations.
-\begin{equation}
-  \label{eq:Hladder.1}
-  H(s,K,U) = (1-s) H_0 + s H_1,
-\end{equation}
-\begin{equation}
-  \label{eq:Hladder.2}
-  H_0 = -\sum_{i=0}^{L-1} (X_{T_i} + X_{B_i}),
-\end{equation}
-\begin{multline}
-  \label{eq:Hladder.3}
-  H_1 =
-    \sum_{i=0}^{L-1} \biggl(K Z_{T_i} Z_{T_{i+1}} - K Z_{T_i} Z_{B_i}
-    - K Z_{B_i} Z_{B_{i+1}} \\
-  - K Z_{T_i} + \frac{U}{2} Z_{B_i}\biggr).
-\end{multline}
-Here qubits $T_L$ and $B_L$ are identified with $T_0$ and $B_0$ respectively.
-
-It is called ``Frustrated Ladder Hamiltonian'' and is schematically represented
-by the following diagram:
-\begin{center}
-  \pgfmathparse{\columnwidth/10.7cm}%
-  \edef\tikzscale{\pgfmathresult}%
-  \begin{tikzpicture}[scale=\tikzscale]
-    \foreach \x in {0,...,9}{
-      \draw (\x,0) circle (0.3) node (n0x\x){$T_{\x}$};
-      \draw (\x,-1) circle (0.3) node (n1x\x){$B_{\x}$};
-      \draw (n0x\x) -- (n1x\x);
-    }
-    \foreach \x[count=\xnext from 1] in {0,...,8}{
-      \draw[dotted,line width=1pt] (n0x\x) -- (n0x\xnext);
-      \draw (n1x\x) -- (n1x\xnext);
-    }
-    \draw[dotted,line width=1pt] (-0.7,0) -- (n0x0);
-    \draw (-0.7,-1) -- (n1x0);
-    \draw[dotted,line width=1pt] (9.7,0) -- (n0x9);
-    \draw (9.7,-1) -- (n1x9);
-  \end{tikzpicture}
-\end{center}
-On this diagram of $L=10$ Frustrated Ladder Hamiltonian
-the solid lines represent ferromagnetic couplings and
-dotted lines --- antiferromagnetic couplings. For a fixed $L$
-the Frustrated Ladder Hamiltonian depends on 3 parameters, $s, K, U$.
-We set $K=1$ and consider the values $s\in[0,1]$, $U\in[0,1]$.
-
-How would one find phase transitions of that Hamiltonian? For that particular
-Hamiltonian people already know a couple of order parameters given by the
-following equations.
-\begin{equation}
-  \label{eq:mt}
-  \absmt = \abs{\sum_i Z_{T_i}(-1)^i}
-\end{equation}
-\begin{equation}
-  \label{eq:mb}
-  m_B = \sum_i Z_{B_i}
-\end{equation}
-
-These are called ``staggered magnetization of the top row'' and ``magnetization
-of the bottom row'' respectively. We can compute these magnetizations for various
-values of the parameters of the Hamiltonian for $L=10$ and produce the
-following diagrams:
-
-\includegraphics[width=\dimexpr\columnwidth-10.0pt]{lanczos_chi0_gp.png}
 
 \VK{The following statement is in the direct contradiction with the statement
 that the main goal of this paper is to learn Fisher Information Metric
@@ -551,47 +487,57 @@ Let $\partial_\mu \psi(\lambda_0)\equiv \left.\frac{\partial \psi(\lambda)}{\par
       is twice differentiable
       at $\lambda = \lambda_0$, where $P_0$ is the orthogonal
       projector $\mathcal{H} \to \ker\rho(\lambda_0)$.
-      Let $P_{{+}}$ be the orthogonal projector
+      Let $P_{{+}}$ be the orthogonal projector \DL{physicists like to denote the orthogonal projector to $P$ by $Q$ (where $P+Q=I$)}
       $\mathcal{H} \to \rho(\lambda_0)(\mathcal{H})$,
       $\rho_{+}(\lambda) = P_{{+}} \rho(\lambda) P_{{+}}^{\dagger}$.
       Then, in the basis where
       $\rho_{+}(\lambda_0) = \diag(\xi_0,\dots,\xi_{n_{+}})$,
       we have
-      \begin{multline}
-        g_{\mu\nu}(\lambda_0)
+      \bes
+      \label{eq:gmunu}
+        \begin{align}
+      \label{eq:gmunu-a}
+      g_{\mu\nu}(\lambda_0)
         = \sum_{j,k} \frac{
             \real\left(
               (\partial_\mu\rho_{+}(\lambda_0))_{jk}
               (\partial_\nu\rho_{+}(\lambda_0))_{kj}
             \right)
           }{2(\xi_j + \xi_k)}\\
-        + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^{\dagger})
+     \label{eq:gmunu-b}
+         + \frac12 \left.\partial_\mu \partial_\nu \Tr(P_0 \rho(\lambda) P_0^{\dagger})
           \right|_{\lambda=\lambda_0}.
-      \end{multline}
-      In that expression the second term can be bounded from below by
-      \begin{equation}
+      \end{align}
+      \ees
+      The term in line~\eqref{eq:gmunu-b} can be bounded from below by
+\beq
         \label{eq:g2bound}
-        \real\left(
+\real\left(
           P_0 \left(\partial_\mu\rho(\lambda_0)\right)
           P_{+}^{\dagger} \left(\rho_{+}(\lambda_0)\right)^{-1}
           P_{+} \left(\partial_\nu\rho(\lambda_0)\right) P_0^{\dagger}
         \right).
-      \end{equation}
+\eeq
       If the bound is not an equality along some vector $\phi$ tangent to
       $\mathcal{M}$ at $\lambda_0\in\mathcal{M}$ then $\rank(\rho(\lambda))$
       is larger than $\rank(\rho(\lambda_0))$ in some punctured neighbourhood
-      of $\lambda_0$ (i.e. the neighbourhood
+      of $\lambda_0$ (i.e., the neighbourhood
       excluding the point $\lambda_0$ itself) along the direction $\phi$.
     \item Suppose $p(\lambda) = \{p_z(\lambda)\}_{z \in \mathcal{S}}$
       is a discrete probability distribution on a finite set $\mathcal{S}$
       defined in a neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$.
       Let $\mathcal{S} = \mathcal{S}_{+} \cup \mathcal{S}_0$ be the split
       of $\mathcal{S}$ into subsets where $p_z(\lambda_0)$ is positive
-      or zero respectively. Assume that $p_z$ has the first derivative
+      or zero respectively. Assume that $p_z$ 
+      %has the first derivative
+      is differentiable
       at $\lambda = \lambda_0$ and $\sum_{z\in\mathcal{S}_0} p_z(\lambda)$
-      has the second derivative at $\lambda = \lambda_0$. Then
-      \begin{multline}
+%      has the second derivative 
+is twice differentiable at $\lambda = \lambda_0$. Then
+\bes
         \label{eq:gmunu.c}
+      \begin{align}
+        \label{eq:gmunu.c-a}
         g_{\mu\nu}(\lambda_0) = \sum_{z\in\mathcal{S}_{+}}
         \frac{
           \left(\partial_{\mu} p_z(\lambda_0)\right)
@@ -599,24 +545,32 @@ Let $\partial_\mu \psi(\lambda_0)\equiv \left.\frac{\partial \psi(\lambda)}{\par
         }{
           4 p_z(\lambda_0)
         } \\
-        + \frac12 \left.\partial_{\mu} \partial_{\nu}
+         \label{eq:gmunu.c-b}
+       + \frac12 \left.\partial_{\mu} \partial_{\nu}
           \sum_{z\in\mathcal{S}_0} p_z(\lambda)\right|_{\lambda = \lambda_0}.
-      \end{multline}
+      \end{align}
+      \ees
   \end{enumerate}
 \end{theorem}
-Part 1 of this theorem
-is essentially the formula (3) in \cite{zanardi2007information}
+Part 1 of this Theorem
+is essentially Eq.~(3) in \cite{zanardi2007information}
 with the exact conditions needed from $\ket{\varphi(\lambda)}$
 specified. As mentioned in \cite{zanardi2007information},
-the proof is essentially done by the Taylor expansion of \eqref{eq:def.F.pure}
-and the usage of the fact that the Hilbert
-space elements representing the states have the norm of 1. Since we do
+the proof is essentially done by Taylor expansion of \eqref{eq:def.F.pure}
+and usage of state normalization.
+%fact that the Hilbert space elements representing the states have unit norm. 
+Since we do
 not require the second derivative to exist, we have to do that expansion
 with a bit more care than \cite{zanardi2007information}, as spelled out
 in the proof below. Note also that part 2 is a generalization of part 1,
-and the proof for part 2 won't use part 1, hence we could just leave
-the proof for part 2. However, the proof for part 1 is much simpler,
-so we leave it here.
+and since the proof of part 2 does not rely on 
+%won't use 
+part 1 
+%, hence 
+we could just leave the proof for part 2. However, the proof of part 1 is much simpler,
+so we 
+%leave
+present it for clarity.
 \begin{proof}[Proof of part 1]
   Due to equivariance of the definition of $g_{\mu\nu}$ with respect to
   the change of the coordinates $\lambda \mapsto \lambda - \lambda_0$,
@@ -856,18 +810,18 @@ $p_0 = \sin^2(\theta)$, $p_1 = \cos^2(\theta)$. Then $g = (1 + \delta_{\sin(4\th
     \mathbb{E}_{\textrm{measurements}} g_c(\lambda_0) = g(\lambda_0) / 2,
   \end{equation}
 where the expectation $E_{\textrm{measurements}}$ is taken accross
-all orthogonal bases in $\mathcal{H}$ using Haar measure (unique measure
+all orthogonal bases in $\mathcal{H}$ using the Haar measure (the unique measure
 invariant with respect to unitary rotations).
-\VK{TODO: should ``measurements'' be italic in a formula inside a theorem?}
+\VK{TODO: should ``measurements'' be italic in a formula inside a theorem?} \DL{No. Also, I prefer a simpler subscript like ``meas''.}
 \end{theorem}
 \begin{proof}
-  The second term in \eqref{eq:gmunu.c} is only relevant when one of the
+  The term in \cref{eq:gmunu.c-b} is only relevant when one of the
   vectors in the measurement basis is orthogonal to $\ket{\psi(\lambda_0)}$
   --- a subset of measure $0$ in the space of all measurements. Thus, we can
-  safely discard it in \eqref{eq:Emeas}. To simplify the proof we notice that
+  safely discard it in \cref{eq:Emeas}. To simplify the proof we notice that
   a quadratic form can be recovered from its values of the form
   $g(\lambda_0)(v, v)$,
-  and both sides of the formula \eqref{eq:Emeas} are
+  and both sides of \cref{eq:Emeas} are
   invariant with respect to the choice of coordinates.
   For a fixed $v$ we can always choose coordinates $\lambda$
   such that $v = \partial_0$, $\lambda_0 = 0$. It remains to prove that
@@ -918,7 +872,7 @@ invariant with respect to unitary rotations).
   \end{equation}
 \end{proof}
 
-Given theorem \ref{th:avggc} is for pure states, one could wonder
+Given that \cref{th:avggc} is for pure states, one could wonder
 whether a similar statement is true for mixed states. In general the answer
 is negative. Moreover, it is possible to find a special case where
 the average of the classical fidelity is 0 while the quantum fidelity
@@ -932,37 +886,37 @@ is non-zero:
 \end{equation}
 gives $g_{\mu\nu}(0) = 1$ while apart for one specific measurement basis where
 one measures $\rho$ along the coordinates in which it is given
-the classical fidelity is $0$ at $\lambda=0$ due to vanishing first derivatives.
+the classical fidelity is $0$ at $\lambda=0$ due to vanishing first derivatives \DL{I'm having trouble parsing this sentence}.
 Such extreme examples are rare. Indeed, the example relies on the bound
 \eqref{eq:g2bound} not being an equality, hence the rank of $\rho$
-being higher in the neighbourhood of a point where similar example applies
-along the direction for which it applies. In one dimension that
+being higher in the neighbourhood of a point where a similar example applies
+along the direction for which it applies. In one dimension 
 a set of such values of $\lambda$ has to be discrete, in any number of
 dimensions it has to have measure $0$.
 
-In today's quantum annealer, though, the measurement basis is not random:
-instead, there is a fixed basis called ``computational basis'' in which
+In today's quantum annealers, though, the measurement basis is not random:
+instead, there is a preferred, fixed basis called ``computational basis'' (determined by the direction of flux circulation~\cite{Berkley:2010zr}) in which
 all measurements are performed. At the same time, today's quantum annealers
-have a limited set of biases and couplings allowed to the user. Below theorem
-shows, that in this case too for pure states classical fidelity almost
-everywhere is a good approximator of quantum fidelity. Even better, in this
-case they are equal!
+have a limited set of biases and couplings available to the user. The Theorem below
+shows that in this case too, for pure states the classical fidelity is almost
+everywhere a good approximator of the quantum fidelity. Even better, in this
+case they are equal.
+
 The main restriction on the Hamiltonian is that its matrix elements are
-real, something which is true e.g. for $X$ and $Z$ biases,
+real, something which is true, e.g., for $X$ and $Z$ biases,
 and $XX$, $YY$, and $ZZ$ couplings.
 \begin{theorem}
   \label{th:comput.basis}
   \begin{itemize}
-    \item Suppose there is a continuously differentiable
-      Hamiltonian $H(\lambda)$ acting on a
-      finite-dimensional Hilbert space $\mathcal{H}$ with a basis which we
-      will call ``computational basis''. Assume that matrix elements of the
-      Hamiltonian are real in that basis. Also assume that the ground state of
-      that Hamiltonian is non-degenerate.
-      Then the ground state could be chosen to have real elements and
+    Consider a continuously differentiable Hamiltonian $H(\lambda)$ acting on a
+      finite-dimensional Hilbert space $\mathcal{H}$. Assume that matrix elements of the
+      Hamiltonian are real in a particular basis which we
+      will call the ``computational basis''. Also assume that the ground state of
+      this Hamiltonian is non-degenerate. Then:
+      \item The ground state can be chosen to have real elements and is
       continuously differentiable w.r.t. $\lambda$.
       elements.
-    \item For a state differentiable w.r.t. $\lambda$ with real matrix elements,
+    \item For a state differentiable w.r.t. $\lambda$ with real matrix elements, the
       fidelity susceptibility metric coincides with its classical counterpart.
   \end{itemize}
 \end{theorem}
@@ -1036,22 +990,22 @@ with $s$, hence it has non-zero
 
 \subsection{Resolution of issue 3}
 \label{ss:resolution-issue-3}
-As we have seen in theorems \ref{th:avggc} and \ref{th:comput.basis},
+As we have seen in Theorems \ref{th:avggc} and \ref{th:comput.basis}, the
 classical fidelity susceptibility is expected to be between $\frac12 \chi_F(s)$
-and $\chi_F(s)$ in many cases of interest. Thus, there is a hope that the
-maximum of classical fidelity susceptibility would be close to the maximum
-of fidelity susceptibility in cases of interest. In particular, the
-Hamiltonians which could be implemented on the current quantum annealers are
-stoquastic and, in particular, have real matrix elements in the computational
-basis. Thus if the ground state is non-degenerate $\chi_{F_c}(s) = \chi_F(s)$
+and $\chi_F(s)$ in many cases of interest. Thus, there is a basis for hope that the
+maximum of the classical fidelity susceptibility is close to the maximum
+of the quantum fidelity susceptibility in cases of interest. In particular, the
+Hamiltonians which can be implemented on the current generation of quantum annealers are typically
+stoquastic~\cite{Bravyi:QIC08} (though see Refs.~\cite{Vinci:2017aa,Ozfidan:2020aa,halverson2020efficient}) and have real matrix elements in the computational
+basis. Thus, if the ground state is non-degenerate then $\chi_{F_c}(s) = \chi_F(s)$
 for the ground state and no information is lost when replacing $\chi_F(s)$ with
 $\chi_{F_c}(s)$ if we are looking for phase transitions at zero temperature.
 \VK{TODO: should we use here $g_c(s) = g(s)$? Should we then explain above
 that we plan to use $g_c$ for classical fidelity susceptibility metric
-whenever we want to avoid the ambiguity with the fidelity susceptibility?}
+whenever we want to avoid the ambiguity with the fidelity susceptibility?} \DL{Yes, but what is the ambiguity?}
 
 Thus, we can reformulate the setting of the paper as the challenge
-between two approaches for identifying the maximums of $\chi_F(s)$.
+between two approaches for identifying the maxima of $\chi_F(s)$.
 The first approach is to use classical state of the art algorithms.
 The second approach involves the following steps.
 \begin{itemize}
@@ -1072,17 +1026,17 @@ Now we move to describe classical algorithms and their performance in this
 task.
 
 \subsection{Classical algorithm: Lanczos}
-If we are interested in the fidelity suceptibility associated
-to the ground states of the Hamiltonian, and the system size is small,
-one of the powerful classical algorithms is based on Lanczos algorithm.
-In the context of this algorithm we think about $H(\lambda)$ as
-a sparse $2^n$ by $2^n$ matrix together with an algorithm to compute
-$H(\lambda)\ket{\psi}$ for a vector $\ket{\psi}$ of the length $2^n$.
+If we are interested in the fidelity susceptibility associated
+with the ground states of the Hamiltonian, and the system size is sufficiently small,
+one of the most powerful classical algorithms is based on the Lanczos algorithm.
+In the context of this algorithm we consider $H(\lambda)$ to be
+a sparse $2^n \times 2^n$ matrix together with an algorithm to compute
+$H(\lambda)\ket{\psi}$ for a vector $\ket{\psi}$ of length $2^n$.
 Typically, Hamiltonians we consider have
 $\Theta(n)$ terms and the computation $H(\lambda)\ket{\psi}$
-takes $\Theta(n2^n)$ time. Lanczos algorithm starts from
+takes $\Theta(n2^n)$ time. The Lanczos algorithm starts from
 a random vector $\ket{\psi}$ and an integer $k$ (typically,
-$k$ is of the order of 40). In exact arithmetic the algorithm would
+$k \sim 40$). In exact arithmetic the algorithm would
 return a unit vector $\ket{\varphi}$ from
 $\mspan(\{H(\lambda)^j\ket{\psi}: j=0,\dots,k-1\})$
 s.t. $\norm{\ket{\varphi}} = 1$ and $\braket{\varphi|H(\lambda)|\varphi}$
@@ -1091,11 +1045,11 @@ using floating point numbers which causes an additional source of errors.
 In fact, the Lanczos algorithm currently used in practice is different
 from the one originally proposed by Lanczos, with most of the differences
 intended to make the algorithm more resilient to numerical errors of
-finite precision arithmetics while minimizing the additional computational
+finite precision arithmetic, while minimizing the additional computational
 cost spent on these efforts.
 
-One then would apply the algorithm for values of parameters on a grid
-and estimate the fidelity susceptibility directly. E.g. if $H$ depends
+One would then apply the algorithm for values of parameters on a grid
+and estimate the fidelity susceptibility directly. E.g., if $H$ depends
 on a single parameter $s\in[0,1]$ one could choose the number of points $N$
 and compute $H(s)$ for $s\in\{j/N: j=0,\dots,N\}$, then estimate
 \begin{equation}
@@ -1109,21 +1063,96 @@ The main downside of this approach is the need to perform $k$
 multiplications of $H(\lambda)$ by a vector of size $2^n$, something
 which typically takes time $\Theta(kn2^n)$, in each of $N$ executions
 of the Lanczos algorithm. In practice, that means that
-this method is the go to method for $n \leq 20$, being able to estimate
+this method is the go-to method for $n \leq 20$, being able to estimate
 the fidelity to a good enough accuracy for $n=20$ in under 2 hours on a
-single machine but impractical for $n > 40$.
+single machine \DL{CPU?} but impractical for $n > 40$.
 
 There are cases where it fails due to either algorithmic or numerical issues,
 especially if the gap between the ground state and first excited state is small,
-or there is a large number of energy levels close to ground state energy.
-However, in these cases other algorithms we reviewed would typically fail
+or there is a large number of energy levels close to the ground state energy.
+However, in these cases other algorithms we considered would typically fail
 as well and such failures could be easily detected by running the algorithm
 with a different initial random state.
 
 \subsection{Results}
-Here is the comparison based on Lanczos diagonalization for L=10 (20-qubit)
+
+\subsection{Example: the frustrated Ising ladder}
+
+The frustrated Ising ladder model we consider in this subsection was introduced in Ref.~\cite{Laumann:2012hs}. It undergoes a first-order 
+quantum phase transition between topologically different
+phases. The problem is defined
+on a quasi-one-dimensional two-leg ladder with nearest neighbor interactions. The model is closely related to a dimer
+problem defined on a dual ladder, through which the topological aspect of its phase transition can be understood intuitively
+
+Consider the Hamiltonian
+on a $2 \times L$ lattice given by the following equations.
+\begin{equation}
+  \label{eq:Hladder.1}
+  H(s,K,U) = (1-s) H_0 + s H_1,
+\end{equation}
+\begin{equation}
+  \label{eq:Hladder.2}
+  H_0 = -\sum_{i=0}^{L-1} (X_{T_i} + X_{B_i}),
+\end{equation}
+\begin{multline}
+  \label{eq:Hladder.3}
+  H_1 = \sum_{i=0}^{L-1} \biggl(K Z_{T_i} Z_{T_{i+1}} - K Z_{T_i} Z_{B_i}
+    - K Z_{B_i} Z_{B_{i+1}} \\
+  - K Z_{T_i} + \frac{U}{2} Z_{B_i}\biggr).
+\end{multline}
+Here qubits $T_L$ and $B_L$ are identified with $T_0$ and $B_0$ respectively.
+
+It is called ``Frustrated Ladder Hamiltonian'' and is schematically represented
+by the following diagram:
+\begin{center}
+  \pgfmathparse{\columnwidth/10.7cm}%
+  \edef\tikzscale{\pgfmathresult}%
+  \begin{tikzpicture}[scale=\tikzscale]
+    \foreach \x in {0,...,9}{
+      \draw (\x,0) circle (0.3) node (n0x\x){$T_{\x}$};
+      \draw (\x,-1) circle (0.3) node (n1x\x){$B_{\x}$};
+      \draw (n0x\x) -- (n1x\x);
+    }
+    \foreach \x[count=\xnext from 1] in {0,...,8}{
+      \draw[dotted,line width=1pt] (n0x\x) -- (n0x\xnext);
+      \draw (n1x\x) -- (n1x\xnext);
+    }
+    \draw[dotted,line width=1pt] (-0.7,0) -- (n0x0);
+    \draw (-0.7,-1) -- (n1x0);
+    \draw[dotted,line width=1pt] (9.7,0) -- (n0x9);
+    \draw (9.7,-1) -- (n1x9);
+  \end{tikzpicture}
+\end{center}
+On this diagram of $L=10$ Frustrated Ladder Hamiltonian
+the solid lines represent ferromagnetic couplings and
+dotted lines --- antiferromagnetic couplings. For a fixed $L$
+the Frustrated Ladder Hamiltonian depends on 3 parameters, $s, K, U$.
+We set $K=1$ and consider the values $s\in[0,1]$, $U\in[0,1]$.
+
+How would one find phase transitions of that Hamiltonian? For that particular
+Hamiltonian people already know a couple of order parameters given by the
+following equations.
+\begin{equation}
+  \label{eq:mt}
+  \absmt = \abs{\sum_i Z_{T_i}(-1)^i}
+\end{equation}
+\begin{equation}
+  \label{eq:mb}
+  m_B = \sum_i Z_{B_i}
+\end{equation}
+
+These are called ``staggered magnetization of the top row'' and ``magnetization
+of the bottom row'' respectively. We can compute these magnetizations for various
+values of the parameters of the Hamiltonian for $L=10$ and produce the
+following diagrams:
+
+\includegraphics[width=\dimexpr\columnwidth-10.0pt]{lanczos_chi0_gp.png}
+
+Here is the comparison based on Lanczos diagonalization for the $L=10$ (20-qubit)
 frustrated ladder Hamiltonian with $K=U=1$: ground truth from Lanczos
 vs reconstruction from Bitstring-ChiFc method.
+
+\DL{Best to generate the complete figure as a pdf and not use tikz; I've sometimes had trouble with publishers when using tikz.}
 \begin{center}
   \pgfmathparse{\columnwidth/20.79cm}%
   \edef\tikzscale{\pgfmathresult}%
@@ -1164,8 +1193,6 @@ bitstrings $z$ is defined as
 \end{equation}
 We are interested in the fidelity between bitstring distributions at different
 $s$ (e.g. $s=s_1$ and $s=s_2$), which we will denote as $F_c(s_1, s_2)$.
-
-\NE{This is an example of a commonly used in-line comment which is separated by color. I could say something like: "This sentence is awkward" or "Needs citation" or very meta "Please use enquote for real quotes and not literal quotes."}
 
 Fidelity susceptibility is defined as the term $\chi_{F_c}(s)$ in the Taylor
 expansion
