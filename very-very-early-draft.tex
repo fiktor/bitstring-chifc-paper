@@ -60,11 +60,56 @@ compared to the number of possible bitstrings.
 \maketitle
 
 \section{Introduction}
+\subsection{Problem we wish to solve}
+In this work we wish to solve a problem of estimating Fisher Information Metric
+(FIM) of a distribution of bitstrings depending on a parameter
+$\lambda \in \mathcal{M}$, given an access to the oracle producing the
+bitstrings from such distribution given the value of the parameter $\lambda$.
+We describe a method ``Bitstring-ChiFc'' which provides a rough estimate of FIM.
+We also consider a toy model called Frustrated Ising Ladder, and demonstrate
+that on a system with 20 qubits (small enough system size where we can
+implement the oracle using Lanczos method).
+We compare \VK{TODO:where} estimated FIM using our method applied to a dataset
+of 140140 bitstings with much more precise values obtained from
+Lanczos method and find that the estimated curve has similar features
+to the exact curve. In particular, our method reproduces the approximate value
+of the critical parameter \VK{TODO:precision?}.
+
+While our method estimates classical fidelity susceptibility (equal, up to
+a constant factor, to the FIM), in subsections
+\ref{ss:fidelity-susceptibility} and \ref{ss:resolution-issue-3}
+we discuss the differences between the classical and quantum fidelity
+susceptibility and conclude that there are cases of interest
+where looking at the classical fidelity susceptibility is sufficient.
+
+We speculate, that under the following assumptions the method could have
+practical applications in determining phase transitions in systems where they
+are previously not known.
+\begin{itemize}
+  \item For the system to be investigated, the oracle can be efficiently
+    implemented in practice, e.g. using a quantum computer.
+  \item Only a rough estimate of the location of phase transitions is needed.
+  \item It is sufficient to obtain such estimate from a few finite system
+    sizes.
+  \item No efficient alternative exists. In particular:
+    \begin{itemize}
+      \item The are known order parameters do not detect phase transitions
+        or there is no known efficient method to estimate their values.
+      \item Oracle implementation above could not be adjusted to efficiently
+        return the estimates of fidelity susceptibility instead of the
+        bitstrings.
+      \item There is no efficient alternative method for estimating the
+        fidelity susceptibility.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Background}
+In \cite{gu2008fidelity} \VK{TODO:read}
+
 \DL{Give a general introduction to the problem we wish to solve and include pertinent background with citations. In particular, we need to address why people care about QPTS, what is the computational complexity of identifying QPTs, and why we think that having a QC can be helpful in this regard.}
 
+\section{Relation to phase transitions}
 \subsection{Challenge: finding phase transitions}
-%%DL too colloquial
-%Let's talk about phase transitions.  
 
 \DL{Presentation of this Hamiltonian should come later, when we discuss a specific example. Or, you can use it in the introduction to motivate some of the specific questions we're attempting to answer, but then refer to it explicitly in terms of some specific aspects of the phase diagram.}
 
@@ -235,7 +280,8 @@ there are no phase transitions due to finite fixed size.
 We want a method capable of identifying phase transitions in systems
 for which these are not known yet. For those systems we may not know
 what are the relevant order parameters. Issue 2 is how to define and
-determine the phase transition in the absence of relevant known order parameters.
+determine the phase transition in the absence of relevant known order
+parameters.
 
 \textbf{Issue 3: loss of information at the time of measurement.}
 ML algorithm only has access to bitstrings but, generally, bitstrings measured
@@ -286,10 +332,19 @@ susceptibility, its classical counterpart, and relations between them.
 
 \subsection{Motivation for the definition of the task}
 Finite size systems in the sequence of systems experiencing a phase transition
-in the thermodynamic limit are known to often experience maxima of fidelity susceptibility at or around the location of the phase transition. Intuitively, that
-makes sense because the fidelity susceptibility measures the square rate of change of the underlying state and it is known that phase transitions correspond to rapid change of the underlying state.
+in the thermodynamic limit are known to often experience maxima of fidelity
+susceptibility at or around the location of the phase transition. Intuitively,
+that makes sense because the fidelity susceptibility measures the square rate of
+change of the underlying state and it is known that phase transitions correspond
+to rapid change of the underlying state. The study of the properties of infinite
+systems, including phase transitions, based on the properties of systems
+of finite size is called finite size scaling and described, e.g., in
+\cite{cardy2012finite}. In this work we pursue a humble goal of studying
+the properties of the finite size system and do not attempt to investigate
+the finite size scaling.
 
 \subsection{Properties of fidelity susceptibility}
+\label{ss:fidelity-susceptibility}
 Roughly speaking, we plan to prove the following properties.
 \begin{itemize}
   \item Formula \eqref{eq:def.F.mixed} is consistent with \eqref{eq:def.F.pure}
@@ -889,6 +944,7 @@ with $s$, hence it has non-zero
 \end{equation}
 
 \subsection{Resolution of issue 3}
+\label{ss:resolution-issue-3}
 As we have seen in theorems \ref{th:avggc} and \ref{th:comput.basis},
 classical fidelity susceptibility is expected to be between $\frac12 \chi_F(s)$
 and $\chi_F(s)$ in many cases of interest. Thus, there is a hope that the
