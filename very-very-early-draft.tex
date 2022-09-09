@@ -107,9 +107,64 @@ are previously not known.
 \end{itemize}
 
 \subsection{Background}
-In \cite{gu2008fidelity} \VK{TODO:read}
+\VK{I am not an expert in the history of that question. The following *seems*
+to be roughly correct, but needs to be confirmed with somebody.}
+Fidelity is a concept from quantum information science, which measures how
+how similar the two states are, and can be applied two pure states, mixed
+states, and probability distributions. As observed in
+\cite{zanardi2007information}, the leading term in the Taylor expansion
+of pure state fidelity with respect to parameters of the Hamiltonian can be used
+to study quantum phase transitions. The coefficient in that leading term is
+called fidelity susceptibility and is a Riemannian tensor.
+In \cite{zanardi2007mixed}, the approach was extended to the mixed state
+fidelity, which allows one to study finite temperature phase transitions.
+
+Later, Gu et al. \cite{gu2008fidelity} discovered that the fidelity
+susceptibility approach can be used to characterise the universality class in
+quantum critical phenomena in 1D asymmetric Hubbard model.
+
+\subsection{Why people care about phase transitions}
+\VK{I'm not an expert in that, wrote to Vitaly Kresin to discuss;
+maybe he knows the people who do care about computational method
+for identifying the locations of phase transitions.}
+
+Adiabatic theorems provide guarantees on the
+amount of time needed to solve a computational problem
+using quantum annealer. That guarantee diverges when the gap
+between the ground state and the first excited state
+becomes small. Such places are usually associated with quantum
+phase transitions.
+
+\VK{If this is indeed the reason, should we instead focus
+on predicting the gap? What is a better predictor of the
+amount of time needed for QA, the gap or $\chi_{F}$? These are related but not
+identical. Anyway, both the gap and $\chi_{F}$ are rigorously defined
+for finite systems as opposite to QPTs, hence if that is the reason,
+why would we talk about QPTs?}
+
+According to the abstract of \cite{vojta2003quantum}, QPTs can influence the
+behavior of electronic systems over a wide range of the phase diagram.
+
+Computational methods to identify (quantum or classical) phase transitions
+could potentially
+be useful in the search of superconductors with given properties.
+In particular, according to the Wikipedia article on unconventional
+superconductors \cite{wiki-unconventional-superconductor}, the
+origins of high-temperature superconductivity are still unclear,
+and is one of the major unsolved problems of theoretical condensed matter
+physics.
+
+\subsection{Computational complexity of identifying phase transitions}
 
 \DL{Give a general introduction to the problem we wish to solve and include pertinent background with citations. In particular, we need to address why people care about QPTS, what is the computational complexity of identifying QPTs, and why we think that having a QC can be helpful in this regard.}
+\VK{I'm not sure how to discuss computational complexity of identifying QPTs in
+the introduction. E.g. a natural way to state the problem would be to
+restrict our attention to $d$-dimensional grid with Hamiltonian $H$, which
+has terms which are periodic with respect to the lattice structure.
+Then the goal would be to identify the value of $s_{\textrm{critical}}$ up to
+$n$ digits of precision. I have no idea what the computational complexity of
+that problem is. Note, that there is no parameter $L$ here describing the
+lattice size, since, by definition, TODO:0}
 
 \section{Relation to phase transitions}
 \subsection{Challenge: finding phase transitions}
@@ -128,7 +183,8 @@ on a $2 \times L$ lattice given by the following equations.
 \end{equation}
 \begin{multline}
   \label{eq:Hladder.3}
-  H_1 = \sum_{i=0}^{L-1} \biggl(K Z_{T_i} Z_{T_{i+1}} - K Z_{T_i} Z_{B_i}
+  H_1 =
+    \sum_{i=0}^{L-1} \biggl(K Z_{T_i} Z_{T_{i+1}} - K Z_{T_i} Z_{B_i}
     - K Z_{B_i} Z_{B_{i+1}} \\
   - K Z_{T_i} + \frac{U}{2} Z_{B_i}\biggr).
 \end{multline}
@@ -1197,7 +1253,7 @@ method.
 \begin{theorem}
     Assume that the model $M$ is continuous with respect to
     $\delta \lambda$ and
-    has the best possible out of sample performance
+    has the least possible out of sample loss
     near $\delta \lambda = 0$.
     Then
     \begin{equation}
@@ -1241,6 +1297,36 @@ in a later subsection?}
   \end{multline}
   Let's introduce the distribution $Q$ on bitstrings $z$
   by $Q(z) = (P(z|s - \delta s / 2) + P(z|s+\delta s/2)) / 2$.
+  We can rewrite the above expression as
+  \begin{multline}
+    \label{eq:M-chiFc2}
+    \chi_{F_c}(s) = \lim_{\delta s \to 0} \frac{2}{\delta s^2}
+    \Biggl(\\
+      1-\mathbb{E}_{z \sim Q} \frac{
+          \sqrt{P(z|s - \delta s / 2) P(z|s+\delta s/2)}
+        }{Q(z)}
+    \Biggr).
+  \end{multline}
+  According to the definition of model $M$ and the assumption that
+  it has the least possible out of sample loss,
+  we have
+  \begin{equation}
+    \label{eq:p-from-M}
+    P(z|s\pm \delta s / 2) / Q(z) =
+      \frac{e^{\pm M(s, \delta s, z) \delta \lambda/2}}{
+        \cosh(M(s, \delta s, z) \delta \lambda/2)
+      }.
+  \end{equation}
+  Substituting \eqref{eq:p-from-M} to \eqref{eq:M-chiFc2} we get
+  \begin{multline}
+    \label{eq:M-chiFc2}
+    \chi_{F_c}(s) = \lim_{\delta s \to 0} \frac{2}{\delta s^2}
+    \Biggl(\\
+      1-\mathbb{E}_{z \sim Q} \frac{1
+        }{\cosh(M(s, \delta s, z) \delta \lambda/2)}
+    \Biggr) \\
+    = .
+  \end{multline}
   \VK{TODO:0 == Work in progress: START}
 \end{proof}
 Then we show that under these (unrealistic) assumptions

@@ -6,7 +6,7 @@
 %Control: page (0) single
 %Control: year (1) truncated
 %Control: production of eprint (0) enabled
-\begin{thebibliography}{5}%
+\begin{thebibliography}{8}%
 \makeatletter
 \providecommand \@ifxundefined [1]{%
  \@ifx{#1\undefined}
@@ -50,6 +50,27 @@
 \providecommand \BibitemShut  [1]{\csname bibitem#1\endcsname}%
 \let\auto@bib@innerbib\@empty
 %</preamble>
+\bibitem [{\citenamefont {Zanardi}\ \emph
+  {et~al.}(2007{\natexlab{a}})\citenamefont {Zanardi}, \citenamefont {Giorda},\
+  and\ \citenamefont {Cozzini}}]{zanardi2007information}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Zanardi}}, \bibinfo {author} {\bibfnamefont {P.}~\bibnamefont {Giorda}}, \
+  and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Cozzini}},\
+  }\href@noop {} {\bibfield  {journal} {\bibinfo  {journal} {Physical review
+  letters}\ }\textbf {\bibinfo {volume} {99}},\ \bibinfo {pages} {100603}
+  (\bibinfo {year} {2007}{\natexlab{a}})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Zanardi}\ \emph
+  {et~al.}(2007{\natexlab{b}})\citenamefont {Zanardi}, \citenamefont {Quan},
+  \citenamefont {Wang},\ and\ \citenamefont {Sun}}]{zanardi2007mixed}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
+  {Zanardi}}, \bibinfo {author} {\bibfnamefont {H.}~\bibnamefont {Quan}},
+  \bibinfo {author} {\bibfnamefont {X.}~\bibnamefont {Wang}}, \ and\ \bibinfo
+  {author} {\bibfnamefont {C.}~\bibnamefont {Sun}},\ }\href@noop {} {\bibfield
+  {journal} {\bibinfo  {journal} {Physical Review A}\ }\textbf {\bibinfo
+  {volume} {75}},\ \bibinfo {pages} {032109} (\bibinfo {year}
+  {2007}{\natexlab{b}})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Gu}\ \emph {et~al.}(2008)\citenamefont {Gu},
   \citenamefont {Kwok}, \citenamefont {Ning}, \citenamefont {Lin} \emph
   {et~al.}}]{gu2008fidelity}%
@@ -61,6 +82,21 @@
   }\href@noop {} {\bibfield  {journal} {\bibinfo  {journal} {Physical Review
   B}\ }\textbf {\bibinfo {volume} {77}},\ \bibinfo {pages} {245109} (\bibinfo
   {year} {2008})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Vojta}(2003)}]{vojta2003quantum}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
+  {Vojta}},\ }\href@noop {} {\bibfield  {journal} {\bibinfo  {journal} {Reports
+  on Progress in Physics}\ }\textbf {\bibinfo {volume} {66}},\ \bibinfo {pages}
+  {2069} (\bibinfo {year} {2003})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont
+  {Wikipedia}(2022)}]{wiki-unconventional-superconductor}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {Wikipedia}},\
+  }\href@noop {} {\enquote {\bibinfo {title} {{Unconventional superconductor}
+  --- {W}ikipedia{,} the free encyclopedia},}\ }\bibinfo {howpublished}
+  {\url{http://en.wikipedia.org/w/index.php?title=Unconventional\%20superconductor&oldid=1101177511}}
+  (\bibinfo {year} {2022}),\ \bibinfo {note} {[Online; accessed
+  09-September-2022]}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Cardy}(2012)}]{cardy2012finite}%
   \BibitemOpen
   \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
@@ -76,16 +112,6 @@
   {title} {Quantum Computation and Quantum Information: 10th Anniversary
   Edition}}}\ (\bibinfo  {publisher} {Cambridge University Press},\ \bibinfo
   {year} {2010})\BibitemShut {NoStop}%
-\bibitem [{\citenamefont {Zanardi}\ \emph {et~al.}(2007)\citenamefont
-  {Zanardi}, \citenamefont {Giorda},\ and\ \citenamefont
-  {Cozzini}}]{zanardi2007information}%
-  \BibitemOpen
-  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {P.}~\bibnamefont
-  {Zanardi}}, \bibinfo {author} {\bibfnamefont {P.}~\bibnamefont {Giorda}}, \
-  and\ \bibinfo {author} {\bibfnamefont {M.}~\bibnamefont {Cozzini}},\
-  }\href@noop {} {\bibfield  {journal} {\bibinfo  {journal} {Physical review
-  letters}\ }\textbf {\bibinfo {volume} {99}},\ \bibinfo {pages} {100603}
-  (\bibinfo {year} {2007})}\BibitemShut {NoStop}%
 \bibitem [{\citenamefont {Bengtsson}\ and\ \citenamefont
   {Życzkowski}(2017)}]{bengtsson_zyczkowski_2017}%
   \BibitemOpen
