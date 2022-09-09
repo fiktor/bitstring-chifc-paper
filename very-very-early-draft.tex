@@ -1,18 +1,17 @@
-\documentclass[
-  american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress
-]{revtex4-2}
-% General document formatting
-\usepackage{tikz}
-\usepackage[margin=0.7in]{geometry}
+\documentclass[american,aps,pra,reprint,floatfix,nofootinbib,superscriptaddress]{revtex4-2}
+\usepackage[unicode=true,pdfusetitle, bookmarks=true,bookmarksnumbered=false,bookmarksopen=false, breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=false]{hyperref}
+\hypersetup{colorlinks,linkcolor=blue,citecolor=red,urlcolor=cyan}
+\usepackage{graphics,epstopdf,amsthm,amsmath,amssymb,mathptmx,colortbl,color,bm,framed,mathrsfs}
+\usepackage[T1]{fontenc}
+\usepackage[up]{subfigure}
+\usepackage[braket, qm]{qcircuit}
+\usepackage{commath}
+\usepackage[capitalise]{cleveref}
+\makeatother
+\usepackage[export]{adjustbox}
 \usepackage{xintfrac}
+\usepackage{tikz}
 \usepackage{braket}
-% Documentation:
-% https://ftp.cc.uoc.gr/mirrors/CTAN/macros/latex/contrib/parskip/parskip.pdf
-\usepackage[utf8]{inputenc}
-\usepackage{hyperref}
-
-% Math packages:
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
 
 % Our definitions:
 \DeclareMathOperator{\smoothen}{smoothen}
@@ -25,11 +24,15 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\mspan}{span}
 %\DeclareMathOperator{\arg}{arg}
-\newcommand{\abs}[1]{\left|#1\right|}
-\newcommand{\norm}[1]{\left\|#1\right\|}
+% \newcommand{\abs}[1]{\left|#1\right|}
+% \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\absmt}{\abs{m_{T}'}}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\bes} {\begin{subequations}}
+\newcommand{\ees} {\end{subequations}}
+
 
 % Draft comments
 \usepackage{xcolor}
@@ -221,14 +224,14 @@ purely classical hardware as illustrated in the following diagram.
 paper (probably Preskill). Find and cite that paper} \DL{yes: Fig.1 of https://www.science.org/doi/10.1126/science.abn7293}
 
 More specifically, throughout this work we consider algorithms attempting
-to take an advantage of quantum computer having a specific structure. First,
-we use quantum annealer to generate a dataset of bitstrings measured
+to take advantage of quantum computers having a specific structure. First,
+we use a quantum annealer to generate a dataset of bitstrings measured
 in the computational basis corresponding
 to various values of the parameters. Then we use a classical algorithm
 involving machine learning
-to process those bitstrings into an estimates of where phase transitions
+to process those bitstrings into estimates of where phase transitions
 are located. We also allow for an interactive version of this structure
-where the classical part of the algorithm can produce additional requests
+where the classical part of the algorithm can produce additional queries
 (values of the parameters and counts of samples requested) for the quantum
 annealer generating bitstrings.
 \begin{center}
@@ -259,14 +262,24 @@ annealer generating bitstrings.
   \end{tikzpicture}
 \end{center}
 
-There could be other algorithms for this task taking an advantage of
+There could be other algorithms for this task taking advantage of
 quantum computers, but investigation of those is beyond the scope of this
 paper.
 
-There are 3 main challenges which need to be discussed before we can approach
+There are 3 main issues which need to be discussed before we can approach
 specifying and solving this task.
 
 \textbf{Issue 1: fixed finite size.}
+\DL{This is a well known problem for physicists and goes under the name ``finite size scaling''. It's not at the same level as issues 2 and 3 and can probably just be mentioned without making it a full-fledged ``issue''.}
+\VK{We can discuss. I do not yet understand your
+comment for the following reason. The issues listed
+here are the issues making the description of the
+challenge above incomplete. In this work we are
+not doing finite size scaling, and, instead,
+compare the performance of the algorithms on
+systems of finite size. Hence, strictly speaking,
+the above challenge needs to be altered in order
+to match what we actually do.}
 One may observe, that we presented diagrams for fixed $L=10$ but wanted to
 discuss phase transitions which are formally only defined in the thermodynamic
 limit $L\to\infty$. That means, that one cannot see the actual phase transitions
@@ -294,7 +307,8 @@ intuitively measures a squared rate of change of the underlying state.
 By definition fidelity between two pure states $\ket{\phi}$ and $\ket{\psi}$ is
 \begin{equation}
 \label{eq:def.F.pure}
-  F(\ket{\phi}, \ket{\psi}) = \abs{\braket{\phi\mid \psi}}.
+  F(\ket{\phi}, \ket{\psi}) = \abs{
+    \braket{\phi\mid \psi}}.
 \end{equation}
 By definition fidelity between two mixed states
 given by density matrices $\rho$ and $\sigma$ is
@@ -313,7 +327,7 @@ $z$ obtained from measurement in the computational basis of some quantum states.
 
 Fidelity susceptibility $\chi_F(s)$ is defined when there is a state $\rho(s)$
 depending on some parameter $s$. In this case we write $F(s_1, s_2)$ instead
-of $F(\rho(s_1), \rho(s_2))$. Then
+of $F(\rho(s_1), \rho(s_2))$. The fidelity susceptibility is the lowest order non-zero
 term in the Taylor expansion of the fidelity:
 \begin{equation}
 \label{eq:def.chiF}
@@ -345,72 +359,87 @@ the finite size scaling.
 
 \subsection{Properties of fidelity susceptibility}
 \label{ss:fidelity-susceptibility}
-Roughly speaking, we plan to prove the following properties.
+%Roughly speaking, 
+In this section we
+%plan to 
+prove the following properties:
 \begin{itemize}
-  \item Formula \eqref{eq:def.F.mixed} is consistent with \eqref{eq:def.F.pure}
-    for pure states and with \eqref{eq:def.Fc} for probability distributions.
-  \item Usually, for fidelity susceptibility (or classical fidelity
-    susceptibility) to be defined, only one derivative of wave function
+%  \item Formula \eqref{eq:def.F.mixed} is consistent with \eqref{eq:def.F.pure} for pure states and with \eqref{eq:def.Fc} for probability distributions.
+  \item Usually, for the fidelity susceptibility (or classical fidelity
+    susceptibility) to be defined, only 
+    %one 
+    the first
+    derivative of the wave function
     (or probabilities) needs to exist.
   \item $0 \leq \chi_{F_c}(s) \leq \chi_F(s)$.
   \item $\mathbb{E}_{\textrm{measurements}} \chi_{F_c}(s) = \chi_F(s)/2$.
   \item For non-degenerate ground states of real-valued Hamiltonians
   $\chi_{F_c}(s) = \chi_F(s)$ almost everywhere.
 \end{itemize}
-See the below theorems for the exact statements.
+%See the below 
+The theorems below provide 
+%for 
+the exact statements.
 \VK{TODO: references to Zanardi papers: https://www.worldscientific.com/doi/abs/10.1142/S0217979210056335}
 
-The following theorem states the properties of the fidelity relevant for this
-paper. For proof of these, as well as many other, properties of the fidelity
-the reader is referred to \cite[\S 9]{nielsen-chuang-2010}.
-\begin{theorem}
+%The following theorem states 
+We first collect some well known properties of the fidelity relevant for this
+paper. For proofs of these, as well as many other properties of the fidelity,
+%the reader is referred to 
+see~\cite[\S 9]{nielsen-chuang-2010}.
+%\begin{theorem}
   \begin{enumerate}
     \item If $\ket{\phi}$ and $\ket{\psi}$ are pure states, then
       \begin{equation}
         F(\ket{\phi}, \ket{\psi}) =
-          F(\ket{\phi}\bra{\phi}, \ket{\psi}\bra{\psi}).
+          F(\ket{\phi}\!\bra{\phi}, \ket{\psi}\!\bra{\psi}).
       \end{equation}
-      In other words, \eqref{eq:def.F.pure} is consistent with
-      \eqref{eq:def.F.mixed}.
+      In other words, \cref{eq:def.F.pure} is consistent with
+      \cref{eq:def.F.mixed}.
     \item If $\rho$ and $\sigma$ are diagonal density matrices with diagonal
       entries equal to $\rho_{zz} = p_z$ and $\sigma_{zz} = q_z$ respectively, then
       \begin{equation}
         F(\rho, \sigma) = F_c(p, q).
       \end{equation}
-      In other words, \eqref{eq:def.F.mixed} is consistent with \eqref{eq:def.Fc}.
+      In other words, \cref{eq:def.F.mixed} is consistent with \cref{eq:def.Fc}.
     \item If $\rho$ and $\sigma$ are two density matrices, we have
-      \begin{equation}
+    \bes
+      \begin{align}
         \label{eq:prop.F.1}
-        F(\rho, \sigma) = F(\sigma, \rho),
-      \end{equation}
-      \begin{equation}
+        F(\rho, \sigma) &= F(\sigma, \rho) \\
+%      \end{equation}
+%      \begin{equation}
         \label{eq:prop.F.2}
-        0 \leq F(\rho, \sigma) \leq 1,
-      \end{equation}
-      \begin{equation}
+        0 &\leq F(\rho, \sigma) \leq 1 \\
+%      \end{equation}
+%      \begin{equation}
         \label{eq:prop.F.3}
-        F(\rho, \sigma) = 1 \textrm{ iff } \rho = \sigma,
-      \end{equation}
-      \begin{equation}
+        F(\rho, \sigma) &= 1 \textrm{ iff } \rho = \sigma \\
+%      \end{equation}
+%      \begin{equation}
         \label{eq:prop.F.4}
-        F(\rho, \sigma) = 0 \textrm{ iff } \rho \sigma = 0.
-      \end{equation}
-  \end{enumerate}
-\end{theorem}
+        F(\rho, \sigma) &= 0 \textrm{ iff } \rho \sigma = 0.
+      \end{align}
+    \ees
+\end{enumerate}
+%\end{theorem}
 
-Before moving to fidelity susceptibility, we want to describe a generalization
-of the fidelity susceptibility covered in \cite{zanardi2007information}.
-Formulas \eqref{eq:def.chiF} and \eqref{eq:def.chiFc} assume dependence
+%%DL: this is well known, so need not be presented as a generalization
+%Before moving to fidelity susceptibility, we 
+%%want to 
+%describe a generalization of the fidelity susceptibility covered in \cite{zanardi2007information}.
+%Formulas 
+Note that Eqs.~\eqref{eq:def.chiF} and~\eqref{eq:def.chiFc} assume dependence
 on a single parameter $s$. In practice, the Hamiltonian of interest depends
-on multiple parameters, e.g. the frustrated ladder Hamiltonian in
-\eqref{eq:Hladder.1} depends on 3 real parameters: $s, K, U$. In general,
-we can say that a state of interest depend on a parameter $\lambda$ from
-a parameter manifold $\mathcal{M}$. In general, these parameters
-can include the parameters of the Hamiltonian and the parameters impacting
-how the state is derived from that Hamiltonian (e.g. temperature).
-Then, similarly to equations
-\eqref{eq:def.chiF} and \eqref{eq:def.chiFc} we can expand the fidelity
-to the second order.
+on multiple parameters; e.g., the frustrated ladder Hamiltonian in
+\cref{eq:Hladder.1} depends on 3 real parameters: $s, K, U$. In general,
+%we can say that 
+a state of interest depends on a parameter set $\lambda$ from
+a parameter manifold $\mathcal{M}$. 
+%In general, these parameters
+This set can include the internal parameters of the Hamiltonian and external parameters impacting
+how the state is derived from that Hamiltonian (e.g., temperature).
+Then, similarly to Eqs.~\eqref{eq:def.chiF} and~\eqref{eq:def.chiFc} we can expand the fidelity to the second order:
 \begin{equation}
 \label{eq:def.gF}
   F(\lambda, \lambda + \delta \lambda) =
@@ -422,18 +451,24 @@ The resulting second term represents a metric
   \label{eq:def.gmetric}
   g = \sum_{\mu\nu} g_{\mu\nu} d\lambda^\mu d\lambda^\nu.
 \end{equation}
-The metric $g$ described by \eqref{eq:def.gF} and \eqref{eq:def.gmetric}
+The metric $g(\lambda)$ described by Eqs.~\eqref{eq:def.gF} and~\eqref{eq:def.gmetric}
 is invariant with
 respect to the choice of the coordinates $\lambda$ on $\mathcal{M}$.
 As explained in \cite{zanardi2007information}, phase transitions are expected
-to correspond to singularities in the metric \eqref{eq:def.gmetric} in the
-thermodynamic limit. We, however, are interested in the finite systems
-of a fixed size. Therefore, we are interested in identifying the vectors
+to correspond to singularities in 
+%the metric \eqref{eq:def.gmetric} 
+$g$ in the
+thermodynamic limit. We, however, are interested in 
+%the 
+finite-size systems.
+%of a fixed size. 
+Therefore, we are interested in identifying the vectors
 $\varphi$ on $\mathcal{M}$ with high values of
 $g(\varphi, \varphi) / g_0(\varphi, \varphi)$,
 where $g_0$ is a metric considered to be non-singular.
-We also note that \eqref{eq:def.gmetric} is $1/4$ of Fisher Information Metric
-for the case of classical fidelity when for all $z$ we have $p_z > 0$.
+We also note that \cref{eq:def.gmetric} is $1/4$ of Fisher information metric
+for the case of classical fidelity when for all $z$ we have $p_z > 0$ \DL{need a ref for this}.
+Let $\partial_\mu \psi(\lambda_0)\equiv \left.\frac{\partial \psi(\lambda)}{\partial \lambda^\mu} \right|_{\lambda=\lambda_0}$.
 
 \begin{theorem}
   \label{th:def.g}
@@ -449,22 +484,22 @@ for the case of classical fidelity when for all $z$ we have $p_z > 0$.
         g_{\mu\nu}(\lambda_0) = \real\bigl(\braket{\partial_\mu \psi(\lambda_0)
           | \partial_\nu \psi(\lambda_0)}\bigr)\\
         - \braket{\partial_\mu \psi(\lambda_0) | \psi(\lambda_0)}
-          \braket{\psi(\lambda_0) | \partial_\nu \psi(\lambda_0)},
+          \braket{\psi(\lambda_0) | \partial_\nu \psi(\lambda_0)}.
       \end{multline}
-      where $\partial_\mu \psi(\lambda_0)$ is a compact notation for the derivative
-      $\left.\frac{\partial \psi(\lambda)}{\partial \lambda^\mu}
-      \right|_{\lambda=\lambda_0}$.
+%      where $\partial_\mu \psi(\lambda_0)$ is a compact notation for the derivative $\left.\frac{\partial \psi(\lambda)}{\partial \lambda^\mu} \right|_{\lambda=\lambda_0}$.
     \item Suppose $\rho(\lambda)$ is a density matrix defined in the
-      neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$, has the first
-      derivative at $\lambda = \lambda_0$, and $\Tr(P_0 \rho(\lambda) P_0^{\dagger})$
-      has the second derivative
+      neighbourhood of $\lambda = \lambda_0 \in \mathcal{M}$, 
+      %has the first derivative 
+      is differentiable at $\lambda = \lambda_0$, and $\Tr(P_0 \rho(\lambda) P_0^{\dagger})$
+      %has the second derivative
+      is twice differentiable
       at $\lambda = \lambda_0$, where $P_0$ is the orthogonal
       projector $\mathcal{H} \to \ker\rho(\lambda_0)$.
       Let $P_{{+}}$ be the orthogonal projector
       $\mathcal{H} \to \rho(\lambda_0)(\mathcal{H})$,
       $\rho_{+}(\lambda) = P_{{+}} \rho(\lambda) P_{{+}}^{\dagger}$.
-      Then in the basis where
-      $\rho_{+}(\lambda_0) = \diag(\xi_0,\dots,\xi_{n_{+}})$
+      Then, in the basis where
+      $\rho_{+}(\lambda_0) = \diag(\xi_0,\dots,\xi_{n_{+}})$,
       we have
       \begin{multline}
         g_{\mu\nu}(\lambda_0)
