@@ -1340,19 +1340,23 @@ in a later subsection?}
   \begin{equation}
     \label{eq:p-from-M}
     P(z|s\pm \delta s / 2) / Q(z) =
-      \frac{e^{\pm M(s, \delta s, z) \delta \lambda/2}}{
-        \cosh(M(s, \delta s, z) \delta \lambda/2)
+      \frac{e^{\pm M(s, \delta s, z) \delta s}}{
+        \cosh(M(s, \delta s, z) \delta s)
       }.
   \end{equation}
   Substituting \eqref{eq:p-from-M} to \eqref{eq:M-chiFc2} we get
   \begin{multline}
-    \label{eq:M-chiFc2}
+    \label{eq:M-chiFc3}
     \chi_{F_c}(s) = \lim_{\delta s \to 0} \frac{2}{\delta s^2}
-    \Biggl(\\
+    \Biggl(
       1-\mathbb{E}_{z \sim Q} \frac{1
-        }{\cosh(M(s, \delta s, z) \delta \lambda/2)}
+        }{\cosh(M(s, \delta s, z) \delta s)}
     \Biggr) \\
-    = .
+    = \lim_{\delta s \to 0}
+      \mathbb{E}_{z \sim Q} \frac{
+          4\sinh^2(M(s, \delta s, z) \delta s/2)
+        }{\delta s^2\cosh(M(s, \delta s, z) \delta s)}\\
+    = \mathbb{E}_{(z, s) \in \mathcal{D}}\left(M(s, 0, z)^2\right).
   \end{multline}
   \VK{TODO:0 == Work in progress: START}
 \end{proof}
@@ -1374,6 +1378,153 @@ TODO: experiments
 
 \VK{TODO:2: 2nd part of the presentation with an image: presentation is a more low-low hanging fruit.}
 \VK{Work in progress: END}
+\VK{TODO:3: Read Fidelity Susceptibility Made Simple: A Unified Quantum Monte Carlo Approach}
+\VK{TODO: caveats section}
+
+\section{Order parameters and fidelity}
+Suppose we have a stochastic map $A = \{A_{yx}\}_{y\in Y, x\in X}$, i.e.
+\begin{equation}
+  \label{eq:Astoch}
+  \sum_{y} A_{yx} = 1, \quad A_{yx} \geq 0.
+\end{equation}
+Note that we do not require $X$ or $Y$ to be finite, but
+for every $x$ we should only have a finite amount of $y$ with non-zero $A_{yx}$,
+otherwise \eqref{eq:Astoch} will not hold.
+Then, if $p$ is a discrete probability distribution on $X$ we can
+compute $Ap$, the probability distribution on $Y$.
+
+An example of stochastic map is a deterministic map $f: X \to Y$:
+we identify such map with the matrix
+\begin{equation}
+  A_{yx} =
+  \begin{cases}
+    1 \text{ if } f(x) = y,\\
+    0 \text{ otherwise.}
+  \end{cases}
+\end{equation}
+
+We know that for any stochastic map, $F(p_0, p_1) \leq F(Ap_0, Ap_1)$.
+In particular, that holds if $X = \{0, 1\}^n$, $Y = \mathbb{R}$ and
+$A$ is given by an order parameter $m\colon \{0, 1\}^n \to \mathbb{R}$.
+
+If $A$ represents an order parameter we have a choice of
+following estimates for $F(Ap_0, Ap_1)$.
+\begin{itemize}
+  \item If there is a relatively simple anzats of $Ap_i$,
+    parameters of which could be estimated from the samples we have,
+    then estimate $F(Ap_0, Ap_1)$ directly using that anzats.
+  \item Estimate means $\mu_i$ and variances $\sigma_i^2$ and estimate
+    \begin{equation}
+      F(Ap_0, Ap_1) \simeq 
+      F(\mathcal{N}(\mu_0, \sigma_0), \mathcal{N}(\mu_1, \sigma_1)).
+    \end{equation}
+    This is not exact.
+  \item Estimate means $\mu_i$ and variances $\sigma_i^2$ and use
+    \begin{equation}
+      F(p_0, p_1) \leq \sup_{\widetilde p_0, \widetilde p_1}
+        F(\widetilde p_0, \widetilde p_1).
+    \end{equation}
+    where the sup is taken over $\widetilde p_0$ and $\widetilde p_1$ with given
+    mean and variance.
+    One can show that such $F$ is maximized on 2-point distributions
+    (see subsection \ref{ss:maxF} below).
+\end{itemize}
+
+\subsection{Normal approximation}
+For 2 normal distributions one has:
+\begin{multline}
+  F(\mathcal{N}(\mu_0, \sigma_0), \mathcal{N}(\mu_1, \sigma_1)) \\
+  = \left(\frac12\left(
+      \frac{\sigma_1}{\sigma_0} + \frac{\sigma_0}{\sigma_1}\right)\right)^{-1/2}
+    \exp\left(\frac{(\mu_0-\mu_1)^2}{4(\sigma_0^2 + \sigma_1^2)}\right).
+\end{multline}
+
+\subsection{Maximization}
+\label{ss:maxF}
+If we apply the method of Lagrange multipliers (caveat: this case violates preconditions of the theorem)
+we get
+\begin{equation}
+  \text{Maximize } \int_{-\infty}^{\infty} \left(\sqrt{p_0(x) p_1(x)} - \sum_{i=0}^1\sum_{j=0}^2 \lambda_{ij} x^j p_i(x)\right)dx.
+\end{equation}
+\VK{TODO: a page of justifications is needed. There are 2 reasons
+  the theorem justifyign the method of Lagrange multipliers
+  does not apply here: (1) the space of measures is not totally bounded;
+  (2) the function is not differentiable at $p_0(x) = p_1(x) = 0$.
+  The reason (1) is essential: indeed, for $\mu_0=\mu_1$ the optimal
+  solution is to send a diminishing probability mass infinitely far away
+  to achieve the desired variance, a sequence of measures which
+  does not converge.}
+
+Solving the maximization problem we get the following conditions
+\begin{equation}
+  \forall x\;
+  \begin{cases}
+    \prod_{i=0}^1\left(\sum_{j=0}^2 \lambda_{ij} x^j\right) \geq 1/4, \\
+    \left[
+      \begin{array}{l}
+        \prod_{i=0}^1\left(\sum_{j=0}^2 \lambda_{ij} x^j\right) = 1/4, \\
+        p_0(x) = p_1(x) = 0.\phantom{]}
+      \end{array}
+    \right.
+  \end{cases}
+\end{equation}
+This implies that the distributions $p_0$ and $p_1$ are non-zero in at most 2 points
+($k$ points if we are matching first $k$ moments instead of 2).
+
+We can find those 2 points by matching mean and variance. We search for
+solutions of the form
+\begin{equation}
+  p_i(x) = q_i \delta(x-a_0) + (1-q_i) \delta(x-a_1).
+\end{equation}
+We have the following equations:
+\begin{equation}
+  \label{eq:2point.qa}
+  \begin{cases}
+    q_i a_0 + (1-q_i) a_1 = \mu_i\text{ for }i = 0,1,\\
+    q_i a_0^2 + (1-q_i) a_1^2 = \mu_i^2 + \sigma_i^2\text{ for }i = 0,1.
+  \end{cases}
+\end{equation}
+Solving these when $\mu_0\neq\mu_1$, we get
+\begin{equation}
+  a_i = \frac{\mu_0 + \mu_1}{2} + \frac{\sigma_0^2 - \sigma_1^2}{2(\mu_0-\mu_1)}
+    \pm \frac{\sqrt{D}}{2(\mu_0-\mu_1)},
+\end{equation}
+where
+\begin{equation}
+  D = ((\mu_0-\mu_1)^2+\sigma_1^2+\sigma_0^2)^2-4\sigma_0^2\sigma_1^2.
+\end{equation}
+Obtaining $q_i$ from \eqref{eq:2point.qa} and evaluating the formula
+for fidelity, we get
+\begin{multline}
+  F(p_0, p_1) =\\
+  \sum_{\pm}\frac{
+    \sqrt{(\mu_0-\mu_1)^4-(\pm(\sigma_0^2-\sigma_1^2)+\sqrt{D})^2}
+  }{2\sqrt{D}}.
+\end{multline}
+For $\mu_0=\mu_1$ the fidelity $F(p_0,p_1)$ can be arbitrarily close to 1.
+
+\subsection{Spin-glass order parameter (15) from 2012 paper}
+Formula (15) in \cite{farhi2012performance} describes the following order parameter:
+\begin{equation}
+  (q')^2 = \frac{1}{n(n-1)}\sum_{i\neq j} \braket{\sigma_i^z\sigma_j^z}^2.
+\end{equation}
+There are 2 natural candidates for the order parameter function
+to be used to compare the estimated fidelity susceptibility with
+the one returned from Bitstring-ChiFc. Assume we want to estimate
+$F(s_0-\delta s/2, s_0 + \delta s/2)$.
+One option is to first estimate
+\begin{equation}
+  w_{ij} = \braket{\sigma_i^z\sigma_j^z}
+\end{equation}
+for $s=s_0$ and use
+\begin{equation}
+  q_1(z) = \frac{1}{n(n-1)}\sum_{i\neq j} w_{ij} z_i z_j.
+\end{equation}
+The second is to use a function $q_2$ of pairs of bitstrings, defined by
+\begin{equation}
+  q_2(z_1,z_2) = \frac{1}{n(n-1)}\sum_{i\neq j}z_{1i}z_{1j}z_{2i}z_{2j}.
+\end{equation}
+
 
 \bibliography{biblio.bib}
 \bibliographystyle{apsrev4-1}
