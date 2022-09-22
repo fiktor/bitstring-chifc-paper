@@ -1,5 +1,6 @@
-\documentclass{revtex4-2}
+\documentclass[twocolumn]{revtex4-2}
 \usepackage{hyperref}
+\usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{braket}
 
@@ -26,5 +27,52 @@
 
 \bibliography{biblio.bib}
 \bibliographystyle{apsrev4-1}
+
+\maketitle
+
+\section{Introduction}
+\subsection{Observation}
+Ideal quantum computers are conjectured to exhibit
+a quantum speedup in returning samples from
+low-energy states of $H$.
+
+\section{Caveats}
+\subsection{Quantum speedup in sampling}
+Consider a Hamiltonian. For example, it can be picked from one of the
+following families.
+\begin{itemize}
+  \item \textbf{Lattice Hamiltonian.} A Hamiltonian on a $d$-dimensional
+    rectangular grid:
+    \begin{multline}
+      H = \sum_{i} (h^{X}_{i} X_i + h^{Z}_i Z_i)
+        + \sum_{\left<i,j\right>} J^{XZ}_{ij}X_iZ_j \\
+          + \frac12\sum_{\left<i,j\right>}\Bigl(J^{XX}_{ij}X_iX_j
+          + J^{YY}_{ij}Y_iY_j + J^{ZZ}_{ij}Z_iZ_j\Bigr).
+    \end{multline}
+    Here $\left<i,j\right>$ in the sum indicates that the sum is over
+    the pairs of nodes $i$ and $j$ connected by an edge,
+    $J^{XX}_{ij} = J^{XX}_{ji}$,
+    $J^{YY}_{ij} = J^{YY}_{ji}$,
+    $J^{ZZ}_{ij} = J^{ZZ}_{ji}$.
+    We picked specifically the terms $X$, $Z$, $XX$, $XZ$, $YY$, $ZZ$ to
+    keep the elements of the Hamiltonian in the computational basis real,
+    which is desireable due to theorem \VK{TODO:ref} below.
+  \item \textbf{Hamiltonian on a random graph}
+    A Hamiltonian on a graph (e.g. a MAXCUT Hamiltonian
+    on a 3-regular graph).
+\end{itemize}
+While Hamiltonian on a random graph presents a challenge to most of the
+classical algorithms, the problem of finding the ground state of such
+Hamiltonian was not studied extensively in the literature.
+
+We define the sampling problem as follows. Let $\ket{\psi_0}$ be the ground
+state of the Hamiltonian and $p$ be the corresponding probability distribution.
+
+
+Do quantum computers exhibit a quantum speedup in finding low
+energy states?
+
+Classically the ground state of 1-dimensional systems can be approximated using
+DMRG in polynomial time.
 
 \end{document}

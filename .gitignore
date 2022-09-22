@@ -9,4 +9,6 @@ build/*
 **/*.nav
 **/*.toc
 **/*.snm
+**/*.bbl
+**/*.blg
 **/*Notes.bib
