@@ -6,6 +6,7 @@
 
 % Our definitions:
 %\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\abs}[1]{\left|#1\right|}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -66,8 +67,13 @@ classical algorithms, the problem of finding the ground state of such
 Hamiltonian was not studied extensively in the literature.
 
 We define the sampling problem as follows. Let $\ket{\psi_0}$ be the ground
-state of the Hamiltonian and $p$ be the corresponding probability distribution.
+state of the Hamiltonian and $p$ be the corresponding probability distribution
+with $p_z = \abs{\braket{z|\psi_0}}^2$.
 
+\textbf{Question.} Would we expect a quantum algorithm to have a significant
+advantage over classical algorithms in this problem?
+
+Here are the results related to this question.
 
 Do quantum computers exhibit a quantum speedup in finding low
 energy states?
